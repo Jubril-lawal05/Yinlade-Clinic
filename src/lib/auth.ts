@@ -1,0 +1,55 @@
+import { sign, verify } from "jsonwebtoken";
+import { cookies } from "next/headers";
+import { z } from "zod";
+import { prisma } from "./prisma";
+
+const JwtPayload = z.object({
+  sub: z.string(),
+  role: z.string(),
+  name: z.string(),
+  iat: z.number().optional(),
+  exp: z.number().optional(),
+});
+
+export type AuthedStaff = {
+  id: string;
+  name: string;
+  role: "Dentist" | "Admin" | "Nurse";
+  email: string;
+  avatar: string;
+};
+
+export function getJwtCookieName() {
+  return process.env.COOKIE_NAME || "clinic_portal_token";
+}
+
+export function signAuthToken(payload: { sub: string; role: string; name: string }) {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) throw new Error("JWT_SECRET is not configured.");
+  const expiresIn = process.env.JWT_EXPIRES_IN || "7d";
+  return sign(payload as any, secret as any, { expiresIn } as any);
+}
+
+export async function getAuthedStaff(): Promise<AuthedStaff | null> {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) throw new Error("JWT_SECRET is not configured.");
+
+  const cookieStore = await cookies();
+  const token = cookieStore.get(getJwtCookieName())?.value;
+  if (!token) return null;
+
+  try {
+    const decoded = verify(token, secret);
+    const parsed = JwtPayload.parse(decoded);
+
+    const staff = await prisma.staff.findUnique({
+      where: { id: parsed.sub },
+      select: { id: true, name: true, role: true, email: true, avatar: true },
+    });
+
+    if (!staff) return null;
+    return staff;
+  } catch {
+    return null;
+  }
+}

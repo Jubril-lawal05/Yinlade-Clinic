@@ -1,0 +1,231 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum StaffRole {
+  Dentist
+  Admin
+  Nurse
+}
+
+enum PatientStatus {
+  active
+  inactive
+}
+
+enum AppointmentStatus {
+  pending
+  confirmed
+  completed
+  cancelled
+}
+
+enum TaskPriority {
+  high
+  medium
+  low
+}
+
+enum InvoiceStatus {
+  unpaid
+  partial
+  paid
+}
+
+enum MessageType {
+  Reminder
+  FollowUp
+  Payment
+  General
+}
+
+model Staff {
+  id           String    @id @default(cuid())
+  name         String
+  role         StaffRole
+  email        String    @unique
+  passwordHash String
+  avatar       String
+
+  createdAt DateTime @default(now())
+
+  appointments     Appointment[]
+  tasks            Task[] @relation("TaskAssignee")
+  treatmentNotes  TreatmentNote[]
+  invoicesPaid    Payment[] @relation("PaymentRecorder")
+  messagesSent    Message[] @relation("MessageSender")
+}
+
+model Patient {
+  id        String        @id @default(cuid())
+  name      String
+  dob       DateTime?
+  phone     String
+  email     String? @unique
+  address   String?
+  job       String?
+  blood     String?
+  allergies String
+  medical   String?
+  smoker    String?
+  alcohol   String?
+  gender    String?
+  status    PatientStatus @default(active)
+  balance   Decimal       @default(0)
+
+  createdAt DateTime @default(now())
+
+  clinicalRecord ClinicalRecord?
+  appointments   Appointment[]
+  invoices       Invoice[]
+  treatmentNotes TreatmentNote[]
+  messages       Message[]
+}
+
+model ClinicalRecord {
+  id String @id @default(cuid())
+
+  patientId String @unique
+  patient   Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  // FDI odontogram: key=FDI tooth number (string), value=array of conditions, e.g. ["caries","filling"]
+  odontogram Json?
+
+  complaint String
+
+  bp    String?
+  pulse String?
+  temp  String?
+  resp  String?
+
+  extraOral String?
+  intraOral String?
+  occlusion String?
+
+  updatedAt DateTime @updatedAt
+
+  treatmentNotes TreatmentNote[]
+}
+
+model TreatmentNote {
+  id String @id @default(cuid())
+
+  patientId String
+  patient   Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  createdById String
+  createdBy   Staff @relation(fields: [createdById], references: [id])
+
+  date DateTime
+
+  procedure String
+  teeth     String?
+  description String?
+  medications String?
+  followUp    String?
+
+  clinicalRecordId String?
+  clinicalRecord   ClinicalRecord? @relation(fields: [clinicalRecordId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+}
+
+model Appointment {
+  id String @id @default(cuid())
+
+  patientId String
+  patient   Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  dentistId String
+  dentist   Staff @relation(fields: [dentistId], references: [id])
+
+  date DateTime
+  time String
+
+  type String
+  status AppointmentStatus @default(pending)
+  notes String?
+
+  createdAt DateTime @default(now())
+
+  @@index([date])
+}
+
+model Invoice {
+  id String @id @default(cuid())
+
+  patientId String
+  patient   Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  date DateTime
+
+  items InvoiceItem[]
+
+  total Decimal
+  paid Decimal @default(0)
+  status InvoiceStatus @default(unpaid)
+
+  payments Payment[]
+
+  createdAt DateTime @default(now())
+
+  @@index([date])
+}
+
+model InvoiceItem {
+  id String @id @default(cuid())
+
+  invoiceId String
+  invoice   Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  description String
+  amount Decimal
+}
+
+model Payment {
+  id String @id @default(cuid())
+
+  invoiceId String
+  invoice   Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  amount Decimal
+
+  recordedById String?
+  recordedBy   Staff? @relation("PaymentRecorder", fields: [recordedById], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+model Task {
+  id String @id @default(cuid())
+
+  title String
+  priority TaskPriority
+  due DateTime
+  done Boolean @default(false)
+
+  assignedToId String?
+  assignedTo   Staff? @relation("TaskAssignee", fields: [assignedToId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+model Message {
+  id String @id @default(cuid())
+
+  patientId String
+  patient   Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  senderId String?
+  sender   Staff? @relation("MessageSender", fields: [senderId], references: [id])
+
+  type MessageType
+  content String
+  createdAt DateTime @default(now())
+}
+

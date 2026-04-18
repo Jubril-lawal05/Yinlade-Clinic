@@ -1,0 +1,1490 @@
+0 verbose cli /Users/ayomidelawal/.nvm/versions/node/v20.20.1/bin/node /Users/ayomidelawal/.nvm/versions/node/v20.20.1/bin/npm
+1 info using npm@10.8.2
+2 info using node@v20.20.1
+3 silly config load:file:/Users/ayomidelawal/.nvm/versions/node/v20.20.1/lib/node_modules/npm/npmrc
+4 silly config load:file:/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/.npmrc
+5 silly config load:file:/Users/ayomidelawal/.npmrc
+6 silly config load:file:/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/.npm-prefix/etc/npmrc
+7 verbose title npm install @prisma/adapter-better-sqlite3 better-sqlite3
+8 verbose argv "install" "@prisma/adapter-better-sqlite3" "better-sqlite3"
+9 verbose logfile logs-max:10 dir:/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/.npm-cache/_logs/2026-03-19T20_14_45_878Z-
+10 verbose logfile /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/.npm-cache/_logs/2026-03-19T20_14_45_878Z-debug-0.log
+11 silly packumentCache heap:2197815296 maxSize:549453824 maxEntrySize:274726912
+12 silly logfile done cleaning log files
+13 silly idealTree buildDeps
+14 silly fetch manifest @prisma/adapter-better-sqlite3@*
+15 silly packumentCache full:https://registry.npmjs.org/@prisma%2fadapter-better-sqlite3 cache-miss
+16 http fetch GET 200 https://registry.npmjs.org/@prisma%2fadapter-better-sqlite3 247ms (cache miss)
+17 silly packumentCache full:https://registry.npmjs.org/@prisma%2fadapter-better-sqlite3 set size:undefined disposed:false
+18 silly fetch manifest better-sqlite3@*
+19 silly packumentCache full:https://registry.npmjs.org/better-sqlite3 cache-miss
+20 http fetch GET 200 https://registry.npmjs.org/better-sqlite3 89ms (cache revalidated)
+21 silly packumentCache full:https://registry.npmjs.org/better-sqlite3 set size:372287 disposed:false
+22 silly placeDep ROOT @prisma/adapter-better-sqlite3@7.5.0 OK for: clinic-app@1.0.0 want: *
+23 silly placeDep ROOT better-sqlite3@12.8.0 OK for: clinic-app@1.0.0 want: *
+24 silly fetch manifest better-sqlite3@^12.6.0
+25 silly packumentCache full:https://registry.npmjs.org/better-sqlite3 cache-hit
+26 silly fetch manifest @prisma/driver-adapter-utils@7.5.0
+27 silly packumentCache full:https://registry.npmjs.org/@prisma%2fdriver-adapter-utils cache-miss
+28 silly fetch manifest bindings@^1.5.0
+29 silly packumentCache full:https://registry.npmjs.org/bindings cache-miss
+30 silly fetch manifest prebuild-install@^7.1.1
+31 silly packumentCache full:https://registry.npmjs.org/prebuild-install cache-miss
+32 http fetch GET 200 https://registry.npmjs.org/bindings 118ms (cache miss)
+33 silly packumentCache full:https://registry.npmjs.org/bindings set size:undefined disposed:false
+34 http fetch GET 200 https://registry.npmjs.org/prebuild-install 134ms (cache miss)
+35 silly packumentCache full:https://registry.npmjs.org/prebuild-install set size:undefined disposed:false
+36 http fetch GET 200 https://registry.npmjs.org/@prisma%2fdriver-adapter-utils 156ms (cache miss)
+37 silly packumentCache full:https://registry.npmjs.org/@prisma%2fdriver-adapter-utils set size:undefined disposed:false
+38 silly placeDep ROOT @prisma/driver-adapter-utils@7.5.0 OK for: @prisma/adapter-better-sqlite3@7.5.0 want: 7.5.0
+39 silly placeDep ROOT bindings@1.5.0 OK for: better-sqlite3@12.8.0 want: ^1.5.0
+40 silly placeDep ROOT prebuild-install@7.1.3 OK for: better-sqlite3@12.8.0 want: ^7.1.1
+41 silly fetch manifest file-uri-to-path@1.0.0
+42 silly packumentCache full:https://registry.npmjs.org/file-uri-to-path cache-miss
+43 silly fetch manifest rc@^1.2.7
+44 silly packumentCache full:https://registry.npmjs.org/rc cache-miss
+45 silly fetch manifest pump@^3.0.0
+46 silly packumentCache full:https://registry.npmjs.org/pump cache-miss
+47 silly fetch manifest tar-fs@^2.0.0
+48 silly packumentCache full:https://registry.npmjs.org/tar-fs cache-miss
+49 silly fetch manifest node-abi@^3.3.0
+50 silly packumentCache full:https://registry.npmjs.org/node-abi cache-miss
+51 silly fetch manifest simple-get@^4.0.0
+52 silly packumentCache full:https://registry.npmjs.org/simple-get cache-miss
+53 silly fetch manifest tunnel-agent@^0.6.0
+54 silly packumentCache full:https://registry.npmjs.org/tunnel-agent cache-miss
+55 http fetch GET 200 https://registry.npmjs.org/file-uri-to-path 52ms (cache miss)
+56 silly packumentCache full:https://registry.npmjs.org/file-uri-to-path set size:undefined disposed:false
+57 silly fetch manifest mkdirp-classic@^0.5.3
+58 silly packumentCache full:https://registry.npmjs.org/mkdirp-classic cache-miss
+59 http fetch GET 200 https://registry.npmjs.org/pump 53ms (cache miss)
+60 silly packumentCache full:https://registry.npmjs.org/pump set size:undefined disposed:false
+61 silly fetch manifest expand-template@^2.0.3
+62 silly packumentCache full:https://registry.npmjs.org/expand-template cache-miss
+63 http fetch GET 200 https://registry.npmjs.org/rc 59ms (cache miss)
+64 silly packumentCache full:https://registry.npmjs.org/rc set size:undefined disposed:false
+65 silly fetch manifest napi-build-utils@^2.0.0
+66 silly packumentCache full:https://registry.npmjs.org/napi-build-utils cache-miss
+67 http fetch GET 200 https://registry.npmjs.org/napi-build-utils 39ms (cache miss)
+68 silly packumentCache full:https://registry.npmjs.org/napi-build-utils set size:undefined disposed:false
+69 silly fetch manifest github-from-package@0.0.0
+70 silly packumentCache full:https://registry.npmjs.org/github-from-package cache-miss
+71 http fetch GET 200 https://registry.npmjs.org/mkdirp-classic 47ms (cache miss)
+72 silly packumentCache full:https://registry.npmjs.org/mkdirp-classic set size:undefined disposed:false
+73 http fetch GET 200 https://registry.npmjs.org/expand-template 47ms (cache miss)
+74 silly packumentCache full:https://registry.npmjs.org/expand-template set size:undefined disposed:false
+75 http fetch GET 200 https://registry.npmjs.org/simple-get 132ms (cache miss)
+76 silly packumentCache full:https://registry.npmjs.org/simple-get set size:undefined disposed:false
+77 http fetch GET 200 https://registry.npmjs.org/tar-fs 136ms (cache miss)
+78 silly packumentCache full:https://registry.npmjs.org/tar-fs set size:undefined disposed:false
+79 http fetch GET 200 https://registry.npmjs.org/tunnel-agent 139ms (cache miss)
+80 silly packumentCache full:https://registry.npmjs.org/tunnel-agent set size:undefined disposed:false
+81 http fetch GET 200 https://registry.npmjs.org/github-from-package 43ms (cache miss)
+82 silly packumentCache full:https://registry.npmjs.org/github-from-package set size:undefined disposed:false
+83 http fetch GET 200 https://registry.npmjs.org/node-abi 153ms (cache miss)
+84 silly packumentCache full:https://registry.npmjs.org/node-abi set size:undefined disposed:false
+85 silly placeDep ROOT file-uri-to-path@1.0.0 OK for: bindings@1.5.0 want: 1.0.0
+86 silly placeDep ROOT expand-template@2.0.3 OK for: prebuild-install@7.1.3 want: ^2.0.3
+87 silly placeDep ROOT github-from-package@0.0.0 OK for: prebuild-install@7.1.3 want: 0.0.0
+88 silly placeDep ROOT mkdirp-classic@0.5.3 OK for: prebuild-install@7.1.3 want: ^0.5.3
+89 silly placeDep ROOT napi-build-utils@2.0.0 OK for: prebuild-install@7.1.3 want: ^2.0.0
+90 silly placeDep ROOT node-abi@3.89.0 OK for: prebuild-install@7.1.3 want: ^3.3.0
+91 silly placeDep ROOT pump@3.0.4 OK for: prebuild-install@7.1.3 want: ^3.0.0
+92 silly placeDep ROOT rc@1.2.8 OK for: prebuild-install@7.1.3 want: ^1.2.7
+93 silly placeDep ROOT simple-get@4.0.1 OK for: prebuild-install@7.1.3 want: ^4.0.0
+94 silly placeDep ROOT tar-fs@2.1.4 OK for: prebuild-install@7.1.3 want: ^2.0.0
+95 silly placeDep ROOT tunnel-agent@0.6.0 OK for: prebuild-install@7.1.3 want: ^0.6.0
+96 silly fetch manifest end-of-stream@^1.1.0
+97 silly packumentCache full:https://registry.npmjs.org/end-of-stream cache-miss
+98 silly fetch manifest once@^1.3.1
+99 silly packumentCache full:https://registry.npmjs.org/once cache-miss
+100 silly fetch manifest ini@~1.3.0
+101 silly packumentCache full:https://registry.npmjs.org/ini cache-miss
+102 silly fetch manifest deep-extend@^0.6.0
+103 silly packumentCache full:https://registry.npmjs.org/deep-extend cache-miss
+104 silly fetch manifest strip-json-comments@~2.0.1
+105 silly packumentCache full:https://registry.npmjs.org/strip-json-comments cache-miss
+106 silly fetch manifest decompress-response@^6.0.0
+107 silly packumentCache full:https://registry.npmjs.org/decompress-response cache-miss
+108 silly fetch manifest once@^1.3.1
+109 silly packumentCache full:https://registry.npmjs.org/once cache-miss
+110 http fetch GET 200 https://registry.npmjs.org/once 39ms (cache miss)
+111 silly packumentCache full:https://registry.npmjs.org/once set size:undefined disposed:false
+112 silly fetch manifest simple-concat@^1.0.0
+113 silly packumentCache full:https://registry.npmjs.org/simple-concat cache-miss
+114 http fetch GET 200 https://registry.npmjs.org/once 46ms (cache miss)
+115 silly packumentCache full:https://registry.npmjs.org/once set size:undefined disposed:false
+116 silly fetch manifest chownr@^1.1.1
+117 silly packumentCache full:https://registry.npmjs.org/chownr cache-miss
+118 http fetch GET 200 https://registry.npmjs.org/ini 48ms (cache miss)
+119 silly packumentCache full:https://registry.npmjs.org/ini set size:undefined disposed:false
+120 silly fetch manifest tar-stream@^2.1.4
+121 silly packumentCache full:https://registry.npmjs.org/tar-stream cache-miss
+122 http fetch GET 200 https://registry.npmjs.org/end-of-stream 51ms (cache miss)
+123 silly packumentCache full:https://registry.npmjs.org/end-of-stream set size:undefined disposed:false
+124 http fetch GET 200 https://registry.npmjs.org/deep-extend 52ms (cache miss)
+125 silly packumentCache full:https://registry.npmjs.org/deep-extend set size:undefined disposed:false
+126 http fetch GET 200 https://registry.npmjs.org/decompress-response 60ms (cache miss)
+127 silly packumentCache full:https://registry.npmjs.org/decompress-response set size:undefined disposed:false
+128 http fetch GET 200 https://registry.npmjs.org/strip-json-comments 60ms (cache miss)
+129 silly packumentCache full:https://registry.npmjs.org/strip-json-comments set size:undefined disposed:false
+130 http fetch GET 200 https://registry.npmjs.org/simple-concat 45ms (cache miss)
+131 silly packumentCache full:https://registry.npmjs.org/simple-concat set size:undefined disposed:false
+132 http fetch GET 200 https://registry.npmjs.org/tar-stream 45ms (cache miss)
+133 silly packumentCache full:https://registry.npmjs.org/tar-stream set size:undefined disposed:false
+134 http fetch GET 200 https://registry.npmjs.org/chownr 71ms (cache miss)
+135 silly packumentCache full:https://registry.npmjs.org/chownr set size:undefined disposed:false
+136 silly placeDep ROOT end-of-stream@1.4.5 OK for: pump@3.0.4 want: ^1.1.0
+137 silly placeDep ROOT once@1.4.0 OK for: pump@3.0.4 want: ^1.3.1
+138 silly fetch manifest once@^1.4.0
+139 silly packumentCache full:https://registry.npmjs.org/once cache-miss
+140 silly fetch manifest wrappy@1
+141 silly packumentCache full:https://registry.npmjs.org/wrappy cache-miss
+142 http fetch GET 200 https://registry.npmjs.org/once 8ms (cache hit)
+143 silly packumentCache full:https://registry.npmjs.org/once set size:11752 disposed:false
+144 http fetch GET 200 https://registry.npmjs.org/wrappy 62ms (cache miss)
+145 silly packumentCache full:https://registry.npmjs.org/wrappy set size:undefined disposed:false
+146 silly placeDep ROOT wrappy@1.0.2 OK for: once@1.4.0 want: 1
+147 silly placeDep ROOT deep-extend@0.6.0 OK for: rc@1.2.8 want: ^0.6.0
+148 silly placeDep ROOT ini@1.3.8 OK for: rc@1.2.8 want: ~1.3.0
+149 silly placeDep ROOT strip-json-comments@2.0.1 OK for: rc@1.2.8 want: ~2.0.1
+150 silly placeDep ROOT decompress-response@6.0.0 OK for: simple-get@4.0.1 want: ^6.0.0
+151 silly placeDep ROOT simple-concat@1.0.1 OK for: simple-get@4.0.1 want: ^1.0.0
+152 silly fetch manifest mimic-response@^3.1.0
+153 silly packumentCache full:https://registry.npmjs.org/mimic-response cache-miss
+154 http fetch GET 200 https://registry.npmjs.org/mimic-response 47ms (cache miss)
+155 silly packumentCache full:https://registry.npmjs.org/mimic-response set size:undefined disposed:false
+156 silly placeDep ROOT mimic-response@3.1.0 OK for: decompress-response@6.0.0 want: ^3.1.0
+157 silly placeDep ROOT chownr@1.1.4 OK for: tar-fs@2.1.4 want: ^1.1.1
+158 silly placeDep ROOT tar-stream@2.2.0 OK for: tar-fs@2.1.4 want: ^2.1.4
+159 silly fetch manifest bl@^4.0.3
+160 silly packumentCache full:https://registry.npmjs.org/bl cache-miss
+161 silly fetch manifest inherits@^2.0.3
+162 silly packumentCache full:https://registry.npmjs.org/inherits cache-miss
+163 silly fetch manifest fs-constants@^1.0.0
+164 silly packumentCache full:https://registry.npmjs.org/fs-constants cache-miss
+165 silly fetch manifest readable-stream@^3.1.1
+166 silly packumentCache full:https://registry.npmjs.org/readable-stream cache-miss
+167 http fetch GET 200 https://registry.npmjs.org/fs-constants 53ms (cache miss)
+168 silly packumentCache full:https://registry.npmjs.org/fs-constants set size:undefined disposed:false
+169 http fetch GET 200 https://registry.npmjs.org/inherits 54ms (cache miss)
+170 silly packumentCache full:https://registry.npmjs.org/inherits set size:undefined disposed:false
+171 http fetch GET 200 https://registry.npmjs.org/readable-stream 54ms (cache miss)
+172 silly packumentCache full:https://registry.npmjs.org/readable-stream set size:undefined disposed:false
+173 http fetch GET 200 https://registry.npmjs.org/bl 66ms (cache miss)
+174 silly packumentCache full:https://registry.npmjs.org/bl set size:undefined disposed:false
+175 silly placeDep ROOT bl@4.1.0 OK for: tar-stream@2.2.0 want: ^4.0.3
+176 silly placeDep ROOT fs-constants@1.0.0 OK for: tar-stream@2.2.0 want: ^1.0.0
+177 silly placeDep ROOT inherits@2.0.4 OK for: tar-stream@2.2.0 want: ^2.0.3
+178 silly placeDep ROOT readable-stream@3.6.2 OK for: tar-stream@2.2.0 want: ^3.1.1
+179 silly fetch manifest buffer@^5.5.0
+180 silly packumentCache full:https://registry.npmjs.org/buffer cache-miss
+181 silly fetch manifest inherits@^2.0.4
+182 silly packumentCache full:https://registry.npmjs.org/inherits cache-miss
+183 silly fetch manifest readable-stream@^3.4.0
+184 silly packumentCache full:https://registry.npmjs.org/readable-stream cache-miss
+185 silly fetch manifest string_decoder@^1.1.1
+186 silly packumentCache full:https://registry.npmjs.org/string_decoder cache-miss
+187 silly fetch manifest util-deprecate@^1.0.1
+188 silly packumentCache full:https://registry.npmjs.org/util-deprecate cache-miss
+189 http fetch GET 200 https://registry.npmjs.org/inherits 26ms (cache hit)
+190 silly packumentCache full:https://registry.npmjs.org/inherits set size:12925 disposed:false
+191 http fetch GET 200 https://registry.npmjs.org/readable-stream 34ms (cache hit)
+192 silly packumentCache full:https://registry.npmjs.org/readable-stream set size:261096 disposed:false
+193 http fetch GET 200 https://registry.npmjs.org/string_decoder 50ms (cache miss)
+194 silly packumentCache full:https://registry.npmjs.org/string_decoder set size:undefined disposed:false
+195 http fetch GET 200 https://registry.npmjs.org/util-deprecate 56ms (cache miss)
+196 silly packumentCache full:https://registry.npmjs.org/util-deprecate set size:undefined disposed:false
+197 http fetch GET 200 https://registry.npmjs.org/buffer 78ms (cache miss)
+198 silly packumentCache full:https://registry.npmjs.org/buffer set size:undefined disposed:false
+199 silly placeDep ROOT buffer@5.7.1 OK for: bl@4.1.0 want: ^5.5.0
+200 silly fetch manifest base64-js@^1.3.1
+201 silly packumentCache full:https://registry.npmjs.org/base64-js cache-miss
+202 silly fetch manifest ieee754@^1.1.13
+203 silly packumentCache full:https://registry.npmjs.org/ieee754 cache-miss
+204 http fetch GET 200 https://registry.npmjs.org/ieee754 59ms (cache miss)
+205 silly packumentCache full:https://registry.npmjs.org/ieee754 set size:undefined disposed:false
+206 http fetch GET 200 https://registry.npmjs.org/base64-js 61ms (cache miss)
+207 silly packumentCache full:https://registry.npmjs.org/base64-js set size:undefined disposed:false
+208 silly placeDep ROOT base64-js@1.5.1 OK for: buffer@5.7.1 want: ^1.3.1
+209 silly placeDep ROOT ieee754@1.2.1 OK for: buffer@5.7.1 want: ^1.1.13
+210 silly placeDep ROOT string_decoder@1.3.0 OK for: readable-stream@3.6.2 want: ^1.1.1
+211 silly placeDep ROOT util-deprecate@1.0.2 OK for: readable-stream@3.6.2 want: ^1.0.1
+212 silly fetch manifest eslint@^2 || ^3 || ^4 || ^5 || ^6 || ^7.2.0 || ^8 || ^9
+213 silly packumentCache full:https://registry.npmjs.org/eslint cache-miss
+214 http fetch GET 200 https://registry.npmjs.org/eslint 45ms (cache revalidated)
+215 silly packumentCache full:https://registry.npmjs.org/eslint set size:1963267 disposed:false
+216 silly fetch manifest jiti@*
+217 silly packumentCache full:https://registry.npmjs.org/jiti cache-miss
+218 http fetch GET 200 https://registry.npmjs.org/jiti 97ms (cache revalidated)
+219 silly packumentCache full:https://registry.npmjs.org/jiti set size:382310 disposed:false
+220 warn ERESOLVE overriding peer dependency {
+220 warn ERESOLVE   code: 'ERESOLVE',
+220 warn ERESOLVE   edge: {
+220 warn ERESOLVE     type: 'peer',
+220 warn ERESOLVE     name: 'eslint',
+220 warn ERESOLVE     spec: '^2 || ^3 || ^4 || ^5 || ^6 || ^7.2.0 || ^8 || ^9',
+220 warn ERESOLVE     error: 'INVALID',
+220 warn ERESOLVE     from: {
+220 warn ERESOLVE       name: 'eslint-plugin-import',
+220 warn ERESOLVE       version: '2.32.0',
+220 warn ERESOLVE       location: 'node_modules/eslint-config-next/node_modules/eslint-plugin-import',
+220 warn ERESOLVE       isWorkspace: false,
+220 warn ERESOLVE       dependents: [Array]
+220 warn ERESOLVE     }
+220 warn ERESOLVE   },
+220 warn ERESOLVE   dep: {
+220 warn ERESOLVE     name: 'eslint',
+220 warn ERESOLVE     version: '9.39.4',
+220 warn ERESOLVE     whileInstalling: {
+220 warn ERESOLVE       name: 'eslint-plugin-import',
+220 warn ERESOLVE       version: '2.32.0',
+220 warn ERESOLVE       path: '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/eslint-config-next/node_modules/eslint-plugin-import'
+220 warn ERESOLVE     },
+220 warn ERESOLVE     location: 'node_modules/eslint',
+220 warn ERESOLVE     isWorkspace: false,
+220 warn ERESOLVE     dependents: [ [Object] ]
+220 warn ERESOLVE   },
+220 warn ERESOLVE   force: false,
+220 warn ERESOLVE   isMine: false,
+220 warn ERESOLVE   strictPeerDeps: false,
+220 warn ERESOLVE   current: {
+220 warn ERESOLVE     name: 'eslint',
+220 warn ERESOLVE     version: '10.0.3',
+220 warn ERESOLVE     location: 'node_modules/eslint',
+220 warn ERESOLVE     isWorkspace: false,
+220 warn ERESOLVE     dependents: [
+220 warn ERESOLVE       [Object], [Object],
+220 warn ERESOLVE       [Object], [Object],
+220 warn ERESOLVE       [Object], [Object],
+220 warn ERESOLVE       [Object], [Object],
+220 warn ERESOLVE       [Object]
+220 warn ERESOLVE     ]
+220 warn ERESOLVE   },
+220 warn ERESOLVE   peerConflict: {
+220 warn ERESOLVE     current: {
+220 warn ERESOLVE       name: 'eslint',
+220 warn ERESOLVE       version: '10.0.3',
+220 warn ERESOLVE       location: 'node_modules/eslint',
+220 warn ERESOLVE       isWorkspace: false,
+220 warn ERESOLVE       dependents: [Array]
+220 warn ERESOLVE     },
+220 warn ERESOLVE     peer: {
+220 warn ERESOLVE       name: 'eslint',
+220 warn ERESOLVE       version: '9.39.4',
+220 warn ERESOLVE       whileInstalling: [Object],
+220 warn ERESOLVE       location: 'node_modules/eslint',
+220 warn ERESOLVE       isWorkspace: false,
+220 warn ERESOLVE       dependents: [Array]
+220 warn ERESOLVE     }
+220 warn ERESOLVE   }
+220 warn ERESOLVE }
+221 silly fetch manifest eslint@^3 || ^4 || ^5 || ^6 || ^7 || ^8 || ^9
+222 silly packumentCache full:https://registry.npmjs.org/eslint cache-miss
+223 http fetch GET 200 https://registry.npmjs.org/eslint 6ms (cache hit)
+224 silly packumentCache full:https://registry.npmjs.org/eslint set size:1963267 disposed:false
+225 warn ERESOLVE overriding peer dependency {
+225 warn ERESOLVE   code: 'ERESOLVE',
+225 warn ERESOLVE   edge: {
+225 warn ERESOLVE     type: 'peer',
+225 warn ERESOLVE     name: 'eslint',
+225 warn ERESOLVE     spec: '^3 || ^4 || ^5 || ^6 || ^7 || ^8 || ^9',
+225 warn ERESOLVE     error: 'INVALID',
+225 warn ERESOLVE     from: {
+225 warn ERESOLVE       name: 'eslint-plugin-jsx-a11y',
+225 warn ERESOLVE       version: '6.10.2',
+225 warn ERESOLVE       location: 'node_modules/eslint-config-next/node_modules/eslint-plugin-jsx-a11y',
+225 warn ERESOLVE       isWorkspace: false,
+225 warn ERESOLVE       dependents: [Array]
+225 warn ERESOLVE     }
+225 warn ERESOLVE   },
+225 warn ERESOLVE   dep: {
+225 warn ERESOLVE     name: 'eslint',
+225 warn ERESOLVE     version: '9.39.4',
+225 warn ERESOLVE     whileInstalling: {
+225 warn ERESOLVE       name: 'eslint-plugin-jsx-a11y',
+225 warn ERESOLVE       version: '6.10.2',
+225 warn ERESOLVE       path: '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/eslint-config-next/node_modules/eslint-plugin-jsx-a11y'
+225 warn ERESOLVE     },
+225 warn ERESOLVE     location: 'node_modules/eslint',
+225 warn ERESOLVE     isWorkspace: false,
+225 warn ERESOLVE     dependents: [ [Object] ]
+225 warn ERESOLVE   },
+225 warn ERESOLVE   force: false,
+225 warn ERESOLVE   isMine: false,
+225 warn ERESOLVE   strictPeerDeps: false,
+225 warn ERESOLVE   current: {
+225 warn ERESOLVE     name: 'eslint',
+225 warn ERESOLVE     version: '10.0.3',
+225 warn ERESOLVE     location: 'node_modules/eslint',
+225 warn ERESOLVE     isWorkspace: false,
+225 warn ERESOLVE     dependents: [
+225 warn ERESOLVE       [Object], [Object],
+225 warn ERESOLVE       [Object], [Object],
+225 warn ERESOLVE       [Object], [Object],
+225 warn ERESOLVE       [Object], [Object],
+225 warn ERESOLVE       [Object]
+225 warn ERESOLVE     ]
+225 warn ERESOLVE   },
+225 warn ERESOLVE   peerConflict: {
+225 warn ERESOLVE     current: {
+225 warn ERESOLVE       name: 'eslint',
+225 warn ERESOLVE       version: '10.0.3',
+225 warn ERESOLVE       location: 'node_modules/eslint',
+225 warn ERESOLVE       isWorkspace: false,
+225 warn ERESOLVE       dependents: [Array]
+225 warn ERESOLVE     },
+225 warn ERESOLVE     peer: {
+225 warn ERESOLVE       name: 'eslint',
+225 warn ERESOLVE       version: '9.39.4',
+225 warn ERESOLVE       whileInstalling: [Object],
+225 warn ERESOLVE       location: 'node_modules/eslint',
+225 warn ERESOLVE       isWorkspace: false,
+225 warn ERESOLVE       dependents: [Array]
+225 warn ERESOLVE     }
+225 warn ERESOLVE   }
+225 warn ERESOLVE }
+226 silly fetch manifest eslint@^3 || ^4 || ^5 || ^6 || ^7 || ^8 || ^9.7
+227 silly packumentCache full:https://registry.npmjs.org/eslint cache-miss
+228 http fetch GET 200 https://registry.npmjs.org/eslint 9ms (cache hit)
+229 silly packumentCache full:https://registry.npmjs.org/eslint set size:1963267 disposed:false
+230 warn ERESOLVE overriding peer dependency {
+230 warn ERESOLVE   code: 'ERESOLVE',
+230 warn ERESOLVE   edge: {
+230 warn ERESOLVE     type: 'peer',
+230 warn ERESOLVE     name: 'eslint',
+230 warn ERESOLVE     spec: '^3 || ^4 || ^5 || ^6 || ^7 || ^8 || ^9.7',
+230 warn ERESOLVE     error: 'INVALID',
+230 warn ERESOLVE     from: {
+230 warn ERESOLVE       name: 'eslint-plugin-react',
+230 warn ERESOLVE       version: '7.37.5',
+230 warn ERESOLVE       location: 'node_modules/eslint-config-next/node_modules/eslint-plugin-react',
+230 warn ERESOLVE       isWorkspace: false,
+230 warn ERESOLVE       dependents: [Array]
+230 warn ERESOLVE     }
+230 warn ERESOLVE   },
+230 warn ERESOLVE   dep: {
+230 warn ERESOLVE     name: 'eslint',
+230 warn ERESOLVE     version: '9.39.4',
+230 warn ERESOLVE     whileInstalling: {
+230 warn ERESOLVE       name: 'eslint-plugin-react',
+230 warn ERESOLVE       version: '7.37.5',
+230 warn ERESOLVE       path: '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/eslint-config-next/node_modules/eslint-plugin-react'
+230 warn ERESOLVE     },
+230 warn ERESOLVE     location: 'node_modules/eslint',
+230 warn ERESOLVE     isWorkspace: false,
+230 warn ERESOLVE     dependents: [ [Object] ]
+230 warn ERESOLVE   },
+230 warn ERESOLVE   force: false,
+230 warn ERESOLVE   isMine: false,
+230 warn ERESOLVE   strictPeerDeps: false,
+230 warn ERESOLVE   current: {
+230 warn ERESOLVE     name: 'eslint',
+230 warn ERESOLVE     version: '10.0.3',
+230 warn ERESOLVE     location: 'node_modules/eslint',
+230 warn ERESOLVE     isWorkspace: false,
+230 warn ERESOLVE     dependents: [
+230 warn ERESOLVE       [Object], [Object],
+230 warn ERESOLVE       [Object], [Object],
+230 warn ERESOLVE       [Object], [Object],
+230 warn ERESOLVE       [Object], [Object],
+230 warn ERESOLVE       [Object]
+230 warn ERESOLVE     ]
+230 warn ERESOLVE   },
+230 warn ERESOLVE   peerConflict: {
+230 warn ERESOLVE     current: {
+230 warn ERESOLVE       name: 'eslint',
+230 warn ERESOLVE       version: '10.0.3',
+230 warn ERESOLVE       location: 'node_modules/eslint',
+230 warn ERESOLVE       isWorkspace: false,
+230 warn ERESOLVE       dependents: [Array]
+230 warn ERESOLVE     },
+230 warn ERESOLVE     peer: {
+230 warn ERESOLVE       name: 'eslint',
+230 warn ERESOLVE       version: '9.39.4',
+230 warn ERESOLVE       whileInstalling: [Object],
+230 warn ERESOLVE       location: 'node_modules/eslint',
+230 warn ERESOLVE       isWorkspace: false,
+230 warn ERESOLVE       dependents: [Array]
+230 warn ERESOLVE     }
+230 warn ERESOLVE   }
+230 warn ERESOLVE }
+231 silly fetch manifest eslint@^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0 || ^9.0.0
+232 silly packumentCache full:https://registry.npmjs.org/eslint cache-miss
+233 http fetch GET 200 https://registry.npmjs.org/eslint 5ms (cache hit)
+234 silly packumentCache full:https://registry.npmjs.org/eslint set size:1963267 disposed:false
+235 warn ERESOLVE overriding peer dependency {
+235 warn ERESOLVE   code: 'ERESOLVE',
+235 warn ERESOLVE   edge: {
+235 warn ERESOLVE     type: 'peer',
+235 warn ERESOLVE     name: 'eslint',
+235 warn ERESOLVE     spec: '^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0 || ^9.0.0',
+235 warn ERESOLVE     error: 'INVALID',
+235 warn ERESOLVE     from: {
+235 warn ERESOLVE       name: 'eslint-plugin-react-hooks',
+235 warn ERESOLVE       version: '7.0.1',
+235 warn ERESOLVE       location: 'node_modules/eslint-config-next/node_modules/eslint-plugin-react-hooks',
+235 warn ERESOLVE       isWorkspace: false,
+235 warn ERESOLVE       dependents: [Array]
+235 warn ERESOLVE     }
+235 warn ERESOLVE   },
+235 warn ERESOLVE   dep: {
+235 warn ERESOLVE     name: 'eslint',
+235 warn ERESOLVE     version: '9.39.4',
+235 warn ERESOLVE     whileInstalling: {
+235 warn ERESOLVE       name: 'eslint-plugin-react-hooks',
+235 warn ERESOLVE       version: '7.0.1',
+235 warn ERESOLVE       path: '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/eslint-config-next/node_modules/eslint-plugin-react-hooks'
+235 warn ERESOLVE     },
+235 warn ERESOLVE     location: 'node_modules/eslint',
+235 warn ERESOLVE     isWorkspace: false,
+235 warn ERESOLVE     dependents: [ [Object] ]
+235 warn ERESOLVE   },
+235 warn ERESOLVE   force: false,
+235 warn ERESOLVE   isMine: false,
+235 warn ERESOLVE   strictPeerDeps: false,
+235 warn ERESOLVE   current: {
+235 warn ERESOLVE     name: 'eslint',
+235 warn ERESOLVE     version: '10.0.3',
+235 warn ERESOLVE     location: 'node_modules/eslint',
+235 warn ERESOLVE     isWorkspace: false,
+235 warn ERESOLVE     dependents: [
+235 warn ERESOLVE       [Object], [Object],
+235 warn ERESOLVE       [Object], [Object],
+235 warn ERESOLVE       [Object], [Object],
+235 warn ERESOLVE       [Object], [Object],
+235 warn ERESOLVE       [Object]
+235 warn ERESOLVE     ]
+235 warn ERESOLVE   },
+235 warn ERESOLVE   peerConflict: {
+235 warn ERESOLVE     current: {
+235 warn ERESOLVE       name: 'eslint',
+235 warn ERESOLVE       version: '10.0.3',
+235 warn ERESOLVE       location: 'node_modules/eslint',
+235 warn ERESOLVE       isWorkspace: false,
+235 warn ERESOLVE       dependents: [Array]
+235 warn ERESOLVE     },
+235 warn ERESOLVE     peer: {
+235 warn ERESOLVE       name: 'eslint',
+235 warn ERESOLVE       version: '9.39.4',
+235 warn ERESOLVE       whileInstalling: [Object],
+235 warn ERESOLVE       location: 'node_modules/eslint',
+235 warn ERESOLVE       isWorkspace: false,
+235 warn ERESOLVE       dependents: [Array]
+235 warn ERESOLVE     }
+235 warn ERESOLVE   }
+235 warn ERESOLVE }
+236 silly reify moves {}
+237 silly audit bulk request {
+237 silly audit   '@babel/code-frame': [ '7.29.0' ],
+237 silly audit   '@babel/compat-data': [ '7.29.0' ],
+237 silly audit   '@babel/core': [ '7.29.0' ],
+237 silly audit   json5: [ '2.2.3', '1.0.2' ],
+237 silly audit   semver: [ '6.3.1', '7.7.4' ],
+237 silly audit   '@babel/generator': [ '7.29.1' ],
+237 silly audit   '@babel/helper-compilation-targets': [ '7.28.6' ],
+237 silly audit   '@babel/helper-globals': [ '7.28.0' ],
+237 silly audit   '@babel/helper-module-imports': [ '7.28.6' ],
+237 silly audit   '@babel/helper-module-transforms': [ '7.28.6' ],
+237 silly audit   '@babel/helper-string-parser': [ '7.27.1' ],
+237 silly audit   '@babel/helper-validator-identifier': [ '7.28.5' ],
+237 silly audit   '@babel/helper-validator-option': [ '7.27.1' ],
+237 silly audit   '@babel/helpers': [ '7.29.2' ],
+237 silly audit   '@babel/parser': [ '7.29.2' ],
+237 silly audit   '@babel/template': [ '7.28.6' ],
+237 silly audit   '@babel/traverse': [ '7.29.0' ],
+237 silly audit   '@babel/types': [ '7.29.0' ],
+237 silly audit   '@chevrotain/cst-dts-gen': [ '10.5.0' ],
+237 silly audit   '@chevrotain/gast': [ '10.5.0' ],
+237 silly audit   '@chevrotain/types': [ '10.5.0' ],
+237 silly audit   '@chevrotain/utils': [ '10.5.0' ],
+237 silly audit   '@cspotcode/source-map-support': [ '0.8.1' ],
+237 silly audit   '@jridgewell/trace-mapping': [ '0.3.9', '0.3.31' ],
+237 silly audit   '@electric-sql/pglite': [ '0.3.15' ],
+237 silly audit   '@electric-sql/pglite-socket': [ '0.0.20' ],
+237 silly audit   '@electric-sql/pglite-tools': [ '0.2.20' ],
+237 silly audit   '@emnapi/core': [ '1.9.1' ],
+237 silly audit   '@emnapi/runtime': [ '1.9.1' ],
+237 silly audit   '@emnapi/wasi-threads': [ '1.2.0' ],
+237 silly audit   '@eslint-community/eslint-utils': [ '4.9.1' ],
+237 silly audit   'eslint-visitor-keys': [ '3.4.3', '5.0.1' ],
+237 silly audit   '@eslint-community/regexpp': [ '4.12.2' ],
+237 silly audit   '@eslint/config-array': [ '0.23.3' ],
+237 silly audit   '@eslint/config-helpers': [ '0.5.3' ],
+237 silly audit   '@eslint/core': [ '1.1.1' ],
+237 silly audit   '@eslint/object-schema': [ '3.0.3' ],
+237 silly audit   '@eslint/plugin-kit': [ '0.6.1' ],
+237 silly audit   '@hono/node-server': [ '1.19.9' ],
+237 silly audit   '@humanfs/core': [ '0.19.1' ],
+237 silly audit   '@humanfs/node': [ '0.16.7' ],
+237 silly audit   '@humanwhocodes/module-importer': [ '1.0.1' ],
+237 silly audit   '@humanwhocodes/retry': [ '0.4.3' ],
+237 silly audit   '@img/colour': [ '1.1.0' ],
+237 silly audit   '@img/sharp-darwin-arm64': [ '0.34.5' ],
+237 silly audit   '@img/sharp-darwin-x64': [ '0.34.5' ],
+237 silly audit   '@img/sharp-libvips-darwin-arm64': [ '1.2.4' ],
+237 silly audit   '@img/sharp-libvips-darwin-x64': [ '1.2.4' ],
+237 silly audit   '@img/sharp-libvips-linux-arm': [ '1.2.4' ],
+237 silly audit   '@img/sharp-libvips-linux-arm64': [ '1.2.4' ],
+237 silly audit   '@img/sharp-libvips-linux-ppc64': [ '1.2.4' ],
+237 silly audit   '@img/sharp-libvips-linux-riscv64': [ '1.2.4' ],
+237 silly audit   '@img/sharp-libvips-linux-s390x': [ '1.2.4' ],
+237 silly audit   '@img/sharp-libvips-linux-x64': [ '1.2.4' ],
+237 silly audit   '@img/sharp-libvips-linuxmusl-arm64': [ '1.2.4' ],
+237 silly audit   '@img/sharp-libvips-linuxmusl-x64': [ '1.2.4' ],
+237 silly audit   '@img/sharp-linux-arm': [ '0.34.5' ],
+237 silly audit   '@img/sharp-linux-arm64': [ '0.34.5' ],
+237 silly audit   '@img/sharp-linux-ppc64': [ '0.34.5' ],
+237 silly audit   '@img/sharp-linux-riscv64': [ '0.34.5' ],
+237 silly audit   '@img/sharp-linux-s390x': [ '0.34.5' ],
+237 silly audit   '@img/sharp-linux-x64': [ '0.34.5' ],
+237 silly audit   '@img/sharp-linuxmusl-arm64': [ '0.34.5' ],
+237 silly audit   '@img/sharp-linuxmusl-x64': [ '0.34.5' ],
+237 silly audit   '@img/sharp-wasm32': [ '0.34.5' ],
+237 silly audit   '@img/sharp-win32-arm64': [ '0.34.5' ],
+237 silly audit   '@img/sharp-win32-ia32': [ '0.34.5' ],
+237 silly audit   '@img/sharp-win32-x64': [ '0.34.5' ],
+237 silly audit   '@jridgewell/gen-mapping': [ '0.3.13' ],
+237 silly audit   '@jridgewell/remapping': [ '2.3.5' ],
+237 silly audit   '@jridgewell/resolve-uri': [ '3.1.2' ],
+237 silly audit   '@jridgewell/sourcemap-codec': [ '1.5.5' ],
+237 silly audit   '@mrleebo/prisma-ast': [ '0.13.1' ],
+237 silly audit   '@napi-rs/wasm-runtime': [ '0.2.12' ],
+237 silly audit   '@next/env': [ '16.2.0' ],
+237 silly audit   '@next/eslint-plugin-next': [ '16.2.0' ],
+237 silly audit   '@next/swc-darwin-arm64': [ '16.2.0' ],
+237 silly audit   '@next/swc-darwin-x64': [ '16.2.0' ],
+237 silly audit   '@next/swc-linux-arm64-gnu': [ '16.2.0' ],
+237 silly audit   '@next/swc-linux-arm64-musl': [ '16.2.0' ],
+237 silly audit   '@next/swc-linux-x64-gnu': [ '16.2.0' ],
+237 silly audit   '@next/swc-linux-x64-musl': [ '16.2.0' ],
+237 silly audit   '@next/swc-win32-arm64-msvc': [ '16.2.0' ],
+237 silly audit   '@next/swc-win32-x64-msvc': [ '16.2.0' ],
+237 silly audit   '@nodelib/fs.scandir': [ '2.1.5' ],
+237 silly audit   '@nodelib/fs.stat': [ '2.0.5' ],
+237 silly audit   '@nodelib/fs.walk': [ '1.2.8' ],
+237 silly audit   '@nolyfill/is-core-module': [ '1.0.39' ],
+237 silly audit   '@prisma/client': [ '7.5.0' ],
+237 silly audit   '@prisma/client-runtime-utils': [ '7.5.0' ],
+237 silly audit   '@prisma/config': [ '7.5.0' ],
+237 silly audit   '@prisma/debug': [ '7.5.0', '7.2.0' ],
+237 silly audit   '@prisma/dev': [ '0.20.0' ],
+237 silly audit   '@prisma/engines': [ '7.5.0' ],
+237 silly audit   '@prisma/engines-version': [ '7.5.0-15.280c870be64f457428992c43c1f6d557fab6e29e' ],
+237 silly audit   '@prisma/get-platform': [ '7.5.0', '7.2.0' ],
+237 silly audit   '@prisma/fetch-engine': [ '7.5.0' ],
+237 silly audit   '@prisma/query-plan-executor': [ '7.2.0' ],
+237 silly audit   '@prisma/studio-core': [ '0.21.1' ],
+237 silly audit   '@rtsao/scc': [ '1.1.0' ],
+237 silly audit   '@standard-schema/spec': [ '1.1.0' ],
+237 silly audit   '@swc/helpers': [ '0.5.15' ],
+237 silly audit   '@tsconfig/node10': [ '1.0.12' ],
+237 silly audit   '@tsconfig/node12': [ '1.0.11' ],
+237 silly audit   '@tsconfig/node14': [ '1.0.3' ],
+237 silly audit   '@tsconfig/node16': [ '1.0.4' ],
+237 silly audit   '@tybys/wasm-util': [ '0.10.1' ],
+237 silly audit   '@types/bcryptjs': [ '2.4.6' ],
+237 silly audit   '@types/esrecurse': [ '4.3.1' ],
+237 silly audit   '@types/estree': [ '1.0.8' ],
+237 silly audit   '@types/json-schema': [ '7.0.15' ],
+237 silly audit   '@types/json5': [ '0.0.29' ],
+237 silly audit   '@types/jsonwebtoken': [ '9.0.10' ],
+237 silly audit   '@types/ms': [ '2.1.0' ],
+237 silly audit   '@types/node': [ '25.5.0' ],
+237 silly audit   '@types/react': [ '19.2.14' ],
+237 silly audit   '@types/react-dom': [ '19.2.3' ],
+237 silly audit   '@typescript-eslint/eslint-plugin': [ '8.57.1' ],
+237 silly audit   ignore: [ '7.0.5', '5.3.2' ],
+237 silly audit   '@typescript-eslint/parser': [ '8.57.1' ],
+237 silly audit   '@typescript-eslint/project-service': [ '8.57.1' ],
+237 silly audit   '@typescript-eslint/scope-manager': [ '8.57.1' ],
+237 silly audit   '@typescript-eslint/tsconfig-utils': [ '8.57.1' ],
+237 silly audit   '@typescript-eslint/type-utils': [ '8.57.1' ],
+237 silly audit   '@typescript-eslint/types': [ '8.57.1' ],
+237 silly audit   '@typescript-eslint/typescript-estree': [ '8.57.1' ],
+237 silly audit   '@typescript-eslint/utils': [ '8.57.1' ],
+237 silly audit   '@typescript-eslint/visitor-keys': [ '8.57.1' ],
+237 silly audit   '@unrs/resolver-binding-android-arm-eabi': [ '1.11.1' ],
+237 silly audit   '@unrs/resolver-binding-android-arm64': [ '1.11.1' ],
+237 silly audit   '@unrs/resolver-binding-darwin-arm64': [ '1.11.1' ],
+237 silly audit   '@unrs/resolver-binding-darwin-x64': [ '1.11.1' ],
+237 silly audit   '@unrs/resolver-binding-freebsd-x64': [ '1.11.1' ],
+237 silly audit   '@unrs/resolver-binding-linux-arm-gnueabihf': [ '1.11.1' ],
+237 silly audit   '@unrs/resolver-binding-linux-arm-musleabihf': [ '1.11.1' ],
+237 silly audit   '@unrs/resolver-binding-linux-arm64-gnu': [ '1.11.1' ],
+237 silly audit   '@unrs/resolver-binding-linux-arm64-musl': [ '1.11.1' ],
+237 silly audit   '@unrs/resolver-binding-linux-ppc64-gnu': [ '1.11.1' ],
+237 silly audit   '@unrs/resolver-binding-linux-riscv64-gnu': [ '1.11.1' ],
+237 silly audit   '@unrs/resolver-binding-linux-riscv64-musl': [ '1.11.1' ],
+237 silly audit   '@unrs/resolver-binding-linux-s390x-gnu': [ '1.11.1' ],
+237 silly audit   '@unrs/resolver-binding-linux-x64-gnu': [ '1.11.1' ],
+237 silly audit   '@unrs/resolver-binding-linux-x64-musl': [ '1.11.1' ],
+237 silly audit   '@unrs/resolver-binding-wasm32-wasi': [ '1.11.1' ],
+237 silly audit   '@unrs/resolver-binding-win32-arm64-msvc': [ '1.11.1' ],
+237 silly audit   '@unrs/resolver-binding-win32-ia32-msvc': [ '1.11.1' ],
+237 silly audit   '@unrs/resolver-binding-win32-x64-msvc': [ '1.11.1' ],
+237 silly audit   acorn: [ '8.16.0' ],
+237 silly audit   'acorn-jsx': [ '5.3.2' ],
+237 silly audit   'acorn-walk': [ '8.3.5' ],
+237 silly audit   ajv: [ '6.14.0' ],
+237 silly audit   arg: [ '4.1.3' ],
+237 silly audit   'aria-query': [ '5.3.2' ],
+237 silly audit   'array-buffer-byte-length': [ '1.0.2' ],
+237 silly audit   'array-includes': [ '3.1.9' ],
+237 silly audit   'array.prototype.findlast': [ '1.2.5' ],
+237 silly audit   'array.prototype.findlastindex': [ '1.2.6' ],
+237 silly audit   'array.prototype.flat': [ '1.3.3' ],
+237 silly audit   'array.prototype.flatmap': [ '1.3.3' ],
+237 silly audit   'array.prototype.tosorted': [ '1.1.4' ],
+237 silly audit   'arraybuffer.prototype.slice': [ '1.0.4' ],
+237 silly audit   'ast-types-flow': [ '0.0.8' ],
+237 silly audit   'async-function': [ '1.0.0' ],
+237 silly audit   'available-typed-arrays': [ '1.0.7' ],
+237 silly audit   'aws-ssl-profiles': [ '1.1.2' ],
+237 silly audit   'axe-core': [ '4.11.1' ],
+237 silly audit   'axobject-query': [ '4.1.0' ],
+237 silly audit   'balanced-match': [ '4.0.4', '1.0.2' ],
+237 silly audit   'baseline-browser-mapping': [ '2.10.9' ],
+237 silly audit   bcryptjs: [ '3.0.3' ],
+237 silly audit   'brace-expansion': [ '5.0.4', '1.1.12' ],
+237 silly audit   braces: [ '3.0.3' ],
+237 silly audit   browserslist: [ '4.28.1' ],
+237 silly audit   'buffer-equal-constant-time': [ '1.0.1' ],
+237 silly audit   c12: [ '3.1.0' ],
+237 silly audit   'call-bind': [ '1.0.8' ],
+237 silly audit   'call-bind-apply-helpers': [ '1.0.2' ],
+237 silly audit   'call-bound': [ '1.0.4' ],
+237 silly audit   'caniuse-lite': [ '1.0.30001780' ],
+237 silly audit   chevrotain: [ '10.5.0' ],
+237 silly audit   chokidar: [ '4.0.3' ],
+237 silly audit   citty: [ '0.1.6', '0.2.1' ],
+237 silly audit   'client-only': [ '0.0.1' ],
+237 silly audit   'concat-map': [ '0.0.1' ],
+237 silly audit   confbox: [ '0.2.4' ],
+237 silly audit   consola: [ '3.4.2' ],
+237 silly audit   'convert-source-map': [ '2.0.0' ],
+237 silly audit   cookie: [ '1.1.1' ],
+237 silly audit   'create-require': [ '1.1.1' ],
+237 silly audit   'cross-spawn': [ '7.0.6' ],
+237 silly audit   csstype: [ '3.2.3' ],
+237 silly audit   'damerau-levenshtein': [ '1.0.8' ],
+237 silly audit   'data-view-buffer': [ '1.0.2' ],
+237 silly audit   'data-view-byte-length': [ '1.0.2' ],
+237 silly audit   'data-view-byte-offset': [ '1.0.1' ],
+237 silly audit   debug: [ '4.4.3', '3.2.7' ],
+237 silly audit   'deep-is': [ '0.1.4' ],
+237 silly audit   'deepmerge-ts': [ '7.1.5' ],
+237 silly audit   'define-data-property': [ '1.1.4' ],
+237 silly audit   'define-properties': [ '1.2.1' ],
+237 silly audit   defu: [ '6.1.4' ],
+237 silly audit   denque: [ '2.1.0' ],
+237 silly audit   destr: [ '2.0.5' ],
+237 silly audit   'detect-libc': [ '2.1.2' ],
+237 silly audit   diff: [ '4.0.4' ],
+237 silly audit   doctrine: [ '2.1.0' ],
+237 silly audit   dotenv: [ '16.6.1' ],
+237 silly audit   'dunder-proto': [ '1.0.1' ],
+237 silly audit   'ecdsa-sig-formatter': [ '1.0.11' ],
+237 silly audit   effect: [ '3.18.4' ],
+237 silly audit   'electron-to-chromium': [ '1.5.321' ],
+237 silly audit   'emoji-regex': [ '9.2.2' ],
+237 silly audit   empathic: [ '2.0.0' ],
+237 silly audit   'es-abstract': [ '1.24.1' ],
+237 silly audit   'es-define-property': [ '1.0.1' ],
+237 silly audit   'es-errors': [ '1.3.0' ],
+237 silly audit   'es-iterator-helpers': [ '1.3.1' ],
+237 silly audit   'es-object-atoms': [ '1.1.1' ],
+237 silly audit   'es-set-tostringtag': [ '2.1.0' ],
+237 silly audit   'es-shim-unscopables': [ '1.1.0' ],
+237 silly audit   'es-to-primitive': [ '1.3.0' ],
+237 silly audit   escalade: [ '3.2.0' ],
+237 silly audit   'escape-string-regexp': [ '4.0.0' ],
+237 silly audit   eslint: [ '10.0.3' ],
+237 silly audit   'eslint-config-next': [ '16.2.0' ],
+237 silly audit   'eslint-import-resolver-typescript': [ '3.10.1' ],
+237 silly audit   'eslint-plugin-import': [ '2.32.0' ],
+237 silly audit   'eslint-plugin-jsx-a11y': [ '6.10.2' ],
+237 silly audit   'eslint-plugin-react': [ '7.37.5' ],
+237 silly audit   'eslint-plugin-react-hooks': [ '7.0.1' ],
+237 silly audit   minimatch: [ '3.1.5', '10.2.4' ],
+237 silly audit   resolve: [ '2.0.0-next.6', '1.22.11' ],
+237 silly audit   'eslint-import-resolver-node': [ '0.3.9' ],
+237 silly audit   'eslint-module-utils': [ '2.12.1' ],
+237 silly audit   'eslint-scope': [ '9.1.2' ],
+237 silly audit   espree: [ '11.2.0' ],
+237 silly audit   esquery: [ '1.7.0' ],
+237 silly audit   esrecurse: [ '4.3.0' ],
+237 silly audit   estraverse: [ '5.3.0' ],
+237 silly audit   esutils: [ '2.0.3' ],
+237 silly audit   exsolve: [ '1.0.8' ],
+237 silly audit   'fast-check': [ '3.23.2' ],
+237 silly audit   'fast-deep-equal': [ '3.1.3' ],
+237 silly audit   'fast-glob': [ '3.3.1' ],
+237 silly audit   'glob-parent': [ '5.1.2', '6.0.2' ],
+237 silly audit   'fast-json-stable-stringify': [ '2.1.0' ],
+237 silly audit   'fast-levenshtein': [ '2.0.6' ],
+237 silly audit   fastq: [ '1.20.1' ],
+237 silly audit   'file-entry-cache': [ '8.0.0' ],
+237 silly audit   'fill-range': [ '7.1.1' ],
+237 silly audit   'find-up': [ '5.0.0' ],
+237 silly audit   'flat-cache': [ '4.0.1' ],
+237 silly audit   flatted: [ '3.4.2' ],
+237 silly audit   'for-each': [ '0.3.5' ],
+237 silly audit   'foreground-child': [ '3.3.1' ],
+237 silly audit   'function-bind': [ '1.1.2' ],
+237 silly audit   'function.prototype.name': [ '1.1.8' ],
+237 silly audit   'functions-have-names': [ '1.2.3' ],
+237 silly audit   'generate-function': [ '2.3.1' ],
+237 silly audit   'generator-function': [ '2.0.1' ],
+237 silly audit   gensync: [ '1.0.0-beta.2' ],
+237 silly audit   'get-intrinsic': [ '1.3.0' ],
+237 silly audit   'get-port-please': [ '3.2.0' ],
+237 silly audit   'get-proto': [ '1.0.1' ],
+237 silly audit   'get-symbol-description': [ '1.1.0' ],
+237 silly audit   'get-tsconfig': [ '4.13.6' ],
+237 silly audit   giget: [ '2.0.0' ],
+237 silly audit   globals: [ '16.4.0' ],
+237 silly audit   globalthis: [ '1.0.4' ],
+237 silly audit   gopd: [ '1.2.0' ],
+237 silly audit   'graceful-fs': [ '4.2.11' ],
+237 silly audit   grammex: [ '3.1.12' ],
+237 silly audit   graphmatch: [ '1.1.1' ],
+237 silly audit   'has-bigints': [ '1.1.0' ],
+237 silly audit   'has-property-descriptors': [ '1.0.2' ],
+237 silly audit   'has-proto': [ '1.2.0' ],
+237 silly audit   'has-symbols': [ '1.1.0' ],
+237 silly audit   'has-tostringtag': [ '1.0.2' ],
+237 silly audit   hasown: [ '2.0.2' ],
+237 silly audit   'hermes-estree': [ '0.25.1' ],
+237 silly audit   'hermes-parser': [ '0.25.1' ],
+237 silly audit   hono: [ '4.11.4' ],
+237 silly audit   'http-status-codes': [ '2.3.0' ],
+237 silly audit   'iconv-lite': [ '0.7.2' ],
+237 silly audit   imurmurhash: [ '0.1.4' ],
+237 silly audit   'internal-slot': [ '1.1.0' ],
+237 silly audit   'is-array-buffer': [ '3.0.5' ],
+237 silly audit   'is-async-function': [ '2.1.1' ],
+237 silly audit   'is-bigint': [ '1.1.0' ],
+237 silly audit   'is-boolean-object': [ '1.2.2' ],
+237 silly audit   'is-bun-module': [ '2.0.0' ],
+237 silly audit   'is-callable': [ '1.2.7' ],
+237 silly audit   'is-core-module': [ '2.16.1' ],
+237 silly audit   'is-data-view': [ '1.0.2' ],
+237 silly audit   'is-date-object': [ '1.1.0' ],
+237 silly audit   'is-extglob': [ '2.1.1' ],
+237 silly audit   'is-finalizationregistry': [ '1.1.1' ],
+237 silly audit   'is-generator-function': [ '1.1.2' ],
+237 silly audit   'is-glob': [ '4.0.3' ],
+237 silly audit   'is-map': [ '2.0.3' ],
+237 silly audit   'is-negative-zero': [ '2.0.3' ],
+237 silly audit   'is-number': [ '7.0.0' ],
+237 silly audit   'is-number-object': [ '1.1.1' ],
+237 silly audit   'is-property': [ '1.0.2' ],
+237 silly audit   'is-regex': [ '1.2.1' ],
+237 silly audit   'is-set': [ '2.0.3' ],
+237 silly audit   'is-shared-array-buffer': [ '1.0.4' ],
+237 silly audit   'is-string': [ '1.1.1' ],
+237 silly audit   'is-symbol': [ '1.1.1' ],
+237 silly audit   'is-typed-array': [ '1.1.15' ],
+237 silly audit   'is-weakmap': [ '2.0.2' ],
+237 silly audit   'is-weakref': [ '1.1.1' ],
+237 silly audit   'is-weakset': [ '2.0.4' ],
+237 silly audit   isarray: [ '2.0.5' ],
+237 silly audit   isexe: [ '2.0.0' ],
+237 silly audit   'iterator.prototype': [ '1.1.5' ],
+237 silly audit   jiti: [ '2.6.1' ],
+237 silly audit   'js-tokens': [ '4.0.0' ],
+237 silly audit   jsesc: [ '3.1.0' ],
+237 silly audit   'json-buffer': [ '3.0.1' ],
+237 silly audit   'json-schema-traverse': [ '0.4.1' ],
+237 silly audit   'json-stable-stringify-without-jsonify': [ '1.0.1' ],
+237 silly audit   jsonwebtoken: [ '9.0.3' ],
+237 silly audit   'jsx-ast-utils': [ '3.3.5' ],
+237 silly audit   jwa: [ '2.0.1' ],
+237 silly audit   jws: [ '4.0.1' ],
+237 silly audit   keyv: [ '4.5.4' ],
+237 silly audit   'language-subtag-registry': [ '0.3.23' ],
+237 silly audit   'language-tags': [ '1.0.9' ],
+237 silly audit   levn: [ '0.4.1' ],
+237 silly audit   lilconfig: [ '2.1.0' ],
+237 silly audit   'locate-path': [ '6.0.0' ],
+237 silly audit   lodash: [ '4.17.21' ],
+237 silly audit   'lodash.includes': [ '4.3.0' ],
+237 silly audit   'lodash.isboolean': [ '3.0.3' ],
+237 silly audit   'lodash.isinteger': [ '4.0.4' ],
+237 silly audit   'lodash.isnumber': [ '3.0.3' ],
+237 silly audit   'lodash.isplainobject': [ '4.0.6' ],
+237 silly audit   'lodash.isstring': [ '4.0.1' ],
+237 silly audit   'lodash.once': [ '4.1.1' ],
+237 silly audit   long: [ '5.3.2' ],
+237 silly audit   'loose-envify': [ '1.4.0' ],
+237 silly audit   'lru-cache': [ '5.1.1' ],
+237 silly audit   'lru.min': [ '1.1.4' ],
+237 silly audit   'make-error': [ '1.3.6' ],
+237 silly audit   'math-intrinsics': [ '1.1.0' ],
+237 silly audit   merge2: [ '1.4.1' ],
+237 silly audit   micromatch: [ '4.0.8' ],
+237 silly audit   minimist: [ '1.2.8' ],
+237 silly audit   ms: [ '2.1.3' ],
+237 silly audit   mysql2: [ '3.15.3' ],
+237 silly audit   'named-placeholders': [ '1.1.6' ],
+237 silly audit   nanoid: [ '3.3.11' ],
+237 silly audit   'napi-postinstall': [ '0.3.4' ],
+237 silly audit   'natural-compare': [ '1.4.0' ],
+237 silly audit   next: [ '16.2.0' ],
+237 silly audit   'node-exports-info': [ '1.6.0' ],
+237 silly audit   'node-fetch-native': [ '1.6.7' ],
+237 silly audit   'node-releases': [ '2.0.36' ],
+237 silly audit   nypm: [ '0.6.5' ],
+237 silly audit   'object-assign': [ '4.1.1' ],
+237 silly audit   'object-inspect': [ '1.13.4' ],
+237 silly audit   'object-keys': [ '1.1.1' ],
+237 silly audit   'object.assign': [ '4.1.7' ],
+237 silly audit   'object.entries': [ '1.1.9' ],
+237 silly audit   'object.fromentries': [ '2.0.8' ],
+237 silly audit   'object.groupby': [ '1.0.3' ],
+237 silly audit   'object.values': [ '1.2.1' ],
+237 silly audit   ohash: [ '2.0.11' ],
+237 silly audit   optionator: [ '0.9.4' ],
+237 silly audit   'own-keys': [ '1.0.1' ],
+237 silly audit   'p-limit': [ '3.1.0' ],
+237 silly audit   'p-locate': [ '5.0.0' ],
+237 silly audit   'path-exists': [ '4.0.0' ],
+237 silly audit   'path-key': [ '3.1.1' ],
+237 silly audit   'path-parse': [ '1.0.7' ],
+237 silly audit   pathe: [ '2.0.3' ],
+237 silly audit   'perfect-debounce': [ '1.0.0' ],
+237 silly audit   picocolors: [ '1.1.1' ],
+237 silly audit   picomatch: [ '2.3.1', '4.0.3' ],
+237 silly audit   'pkg-types': [ '2.3.0' ],
+237 silly audit   'possible-typed-array-names': [ '1.1.0' ],
+237 silly audit   postcss: [ '8.4.31' ],
+237 silly audit   postgres: [ '3.4.7' ],
+237 silly audit   'prelude-ls': [ '1.2.1' ],
+237 silly audit   prisma: [ '7.5.0' ],
+237 silly audit   'prop-types': [ '15.8.1' ],
+237 silly audit   'proper-lockfile': [ '4.1.2' ],
+237 silly audit   'signal-exit': [ '3.0.7', '4.1.0' ],
+237 silly audit   punycode: [ '2.3.1' ],
+237 silly audit   'pure-rand': [ '6.1.0' ],
+237 silly audit   'queue-microtask': [ '1.2.3' ],
+237 silly audit   rc9: [ '2.1.2' ],
+237 silly audit   react: [ '19.2.4' ],
+237 silly audit   'react-dom': [ '19.2.4' ],
+237 silly audit   'react-is': [ '16.13.1' ],
+237 silly audit   readdirp: [ '4.1.2' ],
+237 silly audit   'reflect.getprototypeof': [ '1.0.10' ],
+237 silly audit   'regexp-to-ast': [ '0.5.0' ],
+237 silly audit   'regexp.prototype.flags': [ '1.5.4' ],
+237 silly audit   remeda: [ '2.33.4' ],
+237 silly audit   'resolve-pkg-maps': [ '1.0.0' ],
+237 silly audit   retry: [ '0.12.0' ],
+237 silly audit   reusify: [ '1.1.0' ],
+237 silly audit   'run-parallel': [ '1.2.0' ],
+237 silly audit   'safe-array-concat': [ '1.1.3' ],
+237 silly audit   'safe-buffer': [ '5.2.1' ],
+237 silly audit   'safe-push-apply': [ '1.0.0' ],
+237 silly audit   'safe-regex-test': [ '1.1.0' ],
+237 silly audit   'safer-buffer': [ '2.1.2' ],
+237 silly audit   scheduler: [ '0.27.0' ],
+237 silly audit   'seq-queue': [ '0.0.5' ],
+237 silly audit   'set-function-length': [ '1.2.2' ],
+237 silly audit   'set-function-name': [ '2.0.2' ],
+237 silly audit   'set-proto': [ '1.0.0' ],
+237 silly audit   sharp: [ '0.34.5' ],
+237 silly audit   'shebang-command': [ '2.0.0' ],
+237 silly audit   'shebang-regex': [ '3.0.0' ],
+237 silly audit   'side-channel': [ '1.1.0' ],
+237 silly audit   'side-channel-list': [ '1.0.0' ],
+237 silly audit   'side-channel-map': [ '1.0.1' ],
+237 silly audit   'side-channel-weakmap': [ '1.0.2' ],
+237 silly audit   'source-map-js': [ '1.2.1' ],
+237 silly audit   sqlstring: [ '2.3.3' ],
+237 silly audit   'stable-hash': [ '0.0.5' ],
+237 silly audit   'std-env': [ '3.10.0' ],
+237 silly audit   'stop-iteration-iterator': [ '1.1.0' ],
+237 silly audit   'string.prototype.includes': [ '2.0.1' ],
+237 silly audit   'string.prototype.matchall': [ '4.0.12' ],
+237 silly audit   'string.prototype.repeat': [ '1.0.0' ],
+237 silly audit   'string.prototype.trim': [ '1.2.10' ],
+237 silly audit   'string.prototype.trimend': [ '1.0.9' ],
+237 silly audit   'string.prototype.trimstart': [ '1.0.8' ],
+237 silly audit   'strip-bom': [ '3.0.0' ],
+237 silly audit   'styled-jsx': [ '5.1.6' ],
+237 silly audit   'supports-preserve-symlinks-flag': [ '1.0.0' ],
+237 silly audit   tinyexec: [ '1.0.4' ],
+237 silly audit   tinyglobby: [ '0.2.15' ],
+237 silly audit   fdir: [ '6.5.0' ],
+237 silly audit   'to-regex-range': [ '5.0.1' ],
+237 silly audit   'ts-api-utils': [ '2.5.0' ],
+237 silly audit   'ts-node': [ '10.9.2' ],
+237 silly audit   'tsconfig-paths': [ '3.15.0' ],
+237 silly audit   tslib: [ '2.8.1' ],
+237 silly audit   'type-check': [ '0.4.0' ],
+237 silly audit   'typed-array-buffer': [ '1.0.3' ],
+237 silly audit   'typed-array-byte-length': [ '1.0.3' ],
+237 silly audit   'typed-array-byte-offset': [ '1.0.4' ],
+237 silly audit   'typed-array-length': [ '1.0.7' ],
+237 silly audit   typescript: [ '5.9.3' ],
+237 silly audit   'typescript-eslint': [ '8.57.1' ],
+237 silly audit   'unbox-primitive': [ '1.1.0' ],
+237 silly audit   'undici-types': [ '7.18.2' ],
+237 silly audit   'unrs-resolver': [ '1.11.1' ],
+237 silly audit   'update-browserslist-db': [ '1.2.3' ],
+237 silly audit   'uri-js': [ '4.4.1' ],
+237 silly audit   'v8-compile-cache-lib': [ '3.0.1' ],
+237 silly audit   valibot: [ '1.2.0' ],
+237 silly audit   which: [ '2.0.2' ],
+237 silly audit   'which-boxed-primitive': [ '1.1.1' ],
+237 silly audit   'which-builtin-type': [ '1.2.1' ],
+237 silly audit   'which-collection': [ '1.0.2' ],
+237 silly audit   'which-typed-array': [ '1.1.20' ],
+237 silly audit   'word-wrap': [ '1.2.5' ],
+237 silly audit   yallist: [ '3.1.1' ],
+237 silly audit   yn: [ '3.1.1' ],
+237 silly audit   'yocto-queue': [ '0.1.0' ],
+237 silly audit   zeptomatch: [ '2.1.0' ],
+237 silly audit   zod: [ '4.3.6' ],
+237 silly audit   'zod-validation-error': [ '4.0.2' ],
+237 silly audit   '@prisma/adapter-better-sqlite3': [ '7.5.0' ],
+237 silly audit   'better-sqlite3': [ '12.8.0' ],
+237 silly audit   '@prisma/driver-adapter-utils': [ '7.5.0' ],
+237 silly audit   bindings: [ '1.5.0' ],
+237 silly audit   'prebuild-install': [ '7.1.3' ],
+237 silly audit   'file-uri-to-path': [ '1.0.0' ],
+237 silly audit   'expand-template': [ '2.0.3' ],
+237 silly audit   'github-from-package': [ '0.0.0' ],
+237 silly audit   'mkdirp-classic': [ '0.5.3' ],
+237 silly audit   'napi-build-utils': [ '2.0.0' ],
+237 silly audit   'node-abi': [ '3.89.0' ],
+237 silly audit   pump: [ '3.0.4' ],
+237 silly audit   rc: [ '1.2.8' ],
+237 silly audit   'simple-get': [ '4.0.1' ],
+237 silly audit   'tar-fs': [ '2.1.4' ],
+237 silly audit   'tunnel-agent': [ '0.6.0' ],
+237 silly audit   'end-of-stream': [ '1.4.5' ],
+237 silly audit   once: [ '1.4.0' ],
+237 silly audit   wrappy: [ '1.0.2' ],
+237 silly audit   'deep-extend': [ '0.6.0' ],
+237 silly audit   ini: [ '1.3.8' ],
+237 silly audit   'strip-json-comments': [ '2.0.1' ],
+237 silly audit   'decompress-response': [ '6.0.0' ],
+237 silly audit   'simple-concat': [ '1.0.1' ],
+237 silly audit   'mimic-response': [ '3.1.0' ],
+237 silly audit   chownr: [ '1.1.4' ],
+237 silly audit   'tar-stream': [ '2.2.0' ],
+237 silly audit   bl: [ '4.1.0' ],
+237 silly audit   'fs-constants': [ '1.0.0' ],
+237 silly audit   inherits: [ '2.0.4' ],
+237 silly audit   'readable-stream': [ '3.6.2' ],
+237 silly audit   buffer: [ '5.7.1' ],
+237 silly audit   'base64-js': [ '1.5.1' ],
+237 silly audit   ieee754: [ '1.2.1' ],
+237 silly audit   string_decoder: [ '1.3.0' ],
+237 silly audit   'util-deprecate': [ '1.0.2' ]
+237 silly audit }
+238 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@unrs/resolver-binding-win32-x64-msvc
+239 silly reify mark deleted [
+239 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@unrs/resolver-binding-win32-x64-msvc'
+239 silly reify ]
+240 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@unrs/resolver-binding-win32-ia32-msvc
+241 silly reify mark deleted [
+241 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@unrs/resolver-binding-win32-ia32-msvc'
+241 silly reify ]
+242 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@unrs/resolver-binding-win32-arm64-msvc
+243 silly reify mark deleted [
+243 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@unrs/resolver-binding-win32-arm64-msvc'
+243 silly reify ]
+244 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@unrs/resolver-binding-wasm32-wasi
+245 silly reify mark deleted [
+245 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@unrs/resolver-binding-wasm32-wasi'
+245 silly reify ]
+246 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@napi-rs/wasm-runtime
+247 silly reify mark deleted [
+247 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@napi-rs/wasm-runtime'
+247 silly reify ]
+248 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@emnapi/core
+249 silly reify mark deleted [
+249 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@emnapi/core'
+249 silly reify ]
+250 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@tybys/wasm-util
+251 silly reify mark deleted [
+251 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@tybys/wasm-util'
+251 silly reify ]
+252 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@emnapi/wasi-threads
+253 silly reify mark deleted [
+253 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@emnapi/wasi-threads'
+253 silly reify ]
+254 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@unrs/resolver-binding-linux-x64-musl
+255 silly reify mark deleted [
+255 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@unrs/resolver-binding-linux-x64-musl'
+255 silly reify ]
+256 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@unrs/resolver-binding-linux-x64-gnu
+257 silly reify mark deleted [
+257 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@unrs/resolver-binding-linux-x64-gnu'
+257 silly reify ]
+258 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@unrs/resolver-binding-linux-s390x-gnu
+259 silly reify mark deleted [
+259 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@unrs/resolver-binding-linux-s390x-gnu'
+259 silly reify ]
+260 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@unrs/resolver-binding-linux-riscv64-musl
+261 silly reify mark deleted [
+261 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@unrs/resolver-binding-linux-riscv64-musl'
+261 silly reify ]
+262 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@unrs/resolver-binding-linux-riscv64-gnu
+263 silly reify mark deleted [
+263 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@unrs/resolver-binding-linux-riscv64-gnu'
+263 silly reify ]
+264 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@unrs/resolver-binding-linux-ppc64-gnu
+265 silly reify mark deleted [
+265 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@unrs/resolver-binding-linux-ppc64-gnu'
+265 silly reify ]
+266 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@unrs/resolver-binding-linux-arm64-musl
+267 silly reify mark deleted [
+267 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@unrs/resolver-binding-linux-arm64-musl'
+267 silly reify ]
+268 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@unrs/resolver-binding-linux-arm64-gnu
+269 silly reify mark deleted [
+269 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@unrs/resolver-binding-linux-arm64-gnu'
+269 silly reify ]
+270 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@unrs/resolver-binding-linux-arm-musleabihf
+271 silly reify mark deleted [
+271 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@unrs/resolver-binding-linux-arm-musleabihf'
+271 silly reify ]
+272 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@unrs/resolver-binding-linux-arm-gnueabihf
+273 silly reify mark deleted [
+273 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@unrs/resolver-binding-linux-arm-gnueabihf'
+273 silly reify ]
+274 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@unrs/resolver-binding-freebsd-x64
+275 silly reify mark deleted [
+275 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@unrs/resolver-binding-freebsd-x64'
+275 silly reify ]
+276 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@unrs/resolver-binding-darwin-x64
+277 silly reify mark deleted [
+277 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@unrs/resolver-binding-darwin-x64'
+277 silly reify ]
+278 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@unrs/resolver-binding-android-arm64
+279 silly reify mark deleted [
+279 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@unrs/resolver-binding-android-arm64'
+279 silly reify ]
+280 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@unrs/resolver-binding-android-arm-eabi
+281 silly reify mark deleted [
+281 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@unrs/resolver-binding-android-arm-eabi'
+281 silly reify ]
+282 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@next/swc-win32-x64-msvc
+283 silly reify mark deleted [
+283 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@next/swc-win32-x64-msvc'
+283 silly reify ]
+284 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@next/swc-win32-arm64-msvc
+285 silly reify mark deleted [
+285 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@next/swc-win32-arm64-msvc'
+285 silly reify ]
+286 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@next/swc-linux-x64-musl
+287 silly reify mark deleted [
+287 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@next/swc-linux-x64-musl'
+287 silly reify ]
+288 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@next/swc-linux-x64-gnu
+289 silly reify mark deleted [
+289 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@next/swc-linux-x64-gnu'
+289 silly reify ]
+290 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@next/swc-linux-arm64-musl
+291 silly reify mark deleted [
+291 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@next/swc-linux-arm64-musl'
+291 silly reify ]
+292 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@next/swc-linux-arm64-gnu
+293 silly reify mark deleted [
+293 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@next/swc-linux-arm64-gnu'
+293 silly reify ]
+294 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@next/swc-darwin-x64
+295 silly reify mark deleted [
+295 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@next/swc-darwin-x64'
+295 silly reify ]
+296 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@img/sharp-win32-x64
+297 silly reify mark deleted [
+297 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@img/sharp-win32-x64'
+297 silly reify ]
+298 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@img/sharp-win32-ia32
+299 silly reify mark deleted [
+299 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@img/sharp-win32-ia32'
+299 silly reify ]
+300 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@img/sharp-win32-arm64
+301 silly reify mark deleted [
+301 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@img/sharp-win32-arm64'
+301 silly reify ]
+302 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@img/sharp-wasm32
+303 silly reify mark deleted [
+303 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@img/sharp-wasm32'
+303 silly reify ]
+304 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@img/sharp-linuxmusl-x64
+305 silly reify mark deleted [
+305 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@img/sharp-linuxmusl-x64'
+305 silly reify ]
+306 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@img/sharp-linuxmusl-arm64
+307 silly reify mark deleted [
+307 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@img/sharp-linuxmusl-arm64'
+307 silly reify ]
+308 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@img/sharp-linux-x64
+309 silly reify mark deleted [
+309 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@img/sharp-linux-x64'
+309 silly reify ]
+310 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@img/sharp-linux-s390x
+311 silly reify mark deleted [
+311 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@img/sharp-linux-s390x'
+311 silly reify ]
+312 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@img/sharp-linux-riscv64
+313 silly reify mark deleted [
+313 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@img/sharp-linux-riscv64'
+313 silly reify ]
+314 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@img/sharp-linux-ppc64
+315 silly reify mark deleted [
+315 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@img/sharp-linux-ppc64'
+315 silly reify ]
+316 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@img/sharp-linux-arm64
+317 silly reify mark deleted [
+317 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@img/sharp-linux-arm64'
+317 silly reify ]
+318 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@img/sharp-linux-arm
+319 silly reify mark deleted [
+319 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@img/sharp-linux-arm'
+319 silly reify ]
+320 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@img/sharp-libvips-linuxmusl-x64
+321 silly reify mark deleted [
+321 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@img/sharp-libvips-linuxmusl-x64'
+321 silly reify ]
+322 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@img/sharp-libvips-linuxmusl-arm64
+323 silly reify mark deleted [
+323 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@img/sharp-libvips-linuxmusl-arm64'
+323 silly reify ]
+324 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@img/sharp-libvips-linux-x64
+325 silly reify mark deleted [
+325 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@img/sharp-libvips-linux-x64'
+325 silly reify ]
+326 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@img/sharp-libvips-linux-s390x
+327 silly reify mark deleted [
+327 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@img/sharp-libvips-linux-s390x'
+327 silly reify ]
+328 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@img/sharp-libvips-linux-riscv64
+329 silly reify mark deleted [
+329 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@img/sharp-libvips-linux-riscv64'
+329 silly reify ]
+330 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@img/sharp-libvips-linux-ppc64
+331 silly reify mark deleted [
+331 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@img/sharp-libvips-linux-ppc64'
+331 silly reify ]
+332 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@img/sharp-libvips-linux-arm64
+333 silly reify mark deleted [
+333 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@img/sharp-libvips-linux-arm64'
+333 silly reify ]
+334 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@img/sharp-libvips-linux-arm
+335 silly reify mark deleted [
+335 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@img/sharp-libvips-linux-arm'
+335 silly reify ]
+336 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@img/sharp-libvips-darwin-x64
+337 silly reify mark deleted [
+337 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@img/sharp-libvips-darwin-x64'
+337 silly reify ]
+338 verbose reify failed optional dependency /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@img/sharp-darwin-x64
+339 silly reify mark deleted [
+339 silly reify   '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/@img/sharp-darwin-x64'
+339 silly reify ]
+340 silly tarball no local data for util-deprecate@https://registry.npmjs.org/util-deprecate/-/util-deprecate-1.0.2.tgz. Extracting by manifest.
+341 silly tarball no local data for string_decoder@https://registry.npmjs.org/string_decoder/-/string_decoder-1.3.0.tgz. Extracting by manifest.
+342 silly tarball no local data for buffer@https://registry.npmjs.org/buffer/-/buffer-5.7.1.tgz. Extracting by manifest.
+343 silly tarball no local data for ieee754@https://registry.npmjs.org/ieee754/-/ieee754-1.2.1.tgz. Extracting by manifest.
+344 silly tarball no local data for inherits@https://registry.npmjs.org/inherits/-/inherits-2.0.4.tgz. Extracting by manifest.
+345 silly tarball no local data for base64-js@https://registry.npmjs.org/base64-js/-/base64-js-1.5.1.tgz. Extracting by manifest.
+346 silly tarball no local data for tar-stream@https://registry.npmjs.org/tar-stream/-/tar-stream-2.2.0.tgz. Extracting by manifest.
+347 silly tarball no local data for mimic-response@https://registry.npmjs.org/mimic-response/-/mimic-response-3.1.0.tgz. Extracting by manifest.
+348 silly tarball no local data for readable-stream@https://registry.npmjs.org/readable-stream/-/readable-stream-3.6.2.tgz. Extracting by manifest.
+349 silly tarball no local data for bl@https://registry.npmjs.org/bl/-/bl-4.1.0.tgz. Extracting by manifest.
+350 silly tarball no local data for chownr@https://registry.npmjs.org/chownr/-/chownr-1.1.4.tgz. Extracting by manifest.
+351 silly tarball no local data for decompress-response@https://registry.npmjs.org/decompress-response/-/decompress-response-6.0.0.tgz. Extracting by manifest.
+352 silly tarball no local data for simple-concat@https://registry.npmjs.org/simple-concat/-/simple-concat-1.0.1.tgz. Extracting by manifest.
+353 silly tarball no local data for deep-extend@https://registry.npmjs.org/deep-extend/-/deep-extend-0.6.0.tgz. Extracting by manifest.
+354 silly tarball no local data for fs-constants@https://registry.npmjs.org/fs-constants/-/fs-constants-1.0.0.tgz. Extracting by manifest.
+355 silly tarball no local data for ini@https://registry.npmjs.org/ini/-/ini-1.3.8.tgz. Extracting by manifest.
+356 silly tarball no local data for wrappy@https://registry.npmjs.org/wrappy/-/wrappy-1.0.2.tgz. Extracting by manifest.
+357 silly tarball no local data for once@https://registry.npmjs.org/once/-/once-1.4.0.tgz. Extracting by manifest.
+358 silly tarball no local data for tunnel-agent@https://registry.npmjs.org/tunnel-agent/-/tunnel-agent-0.6.0.tgz. Extracting by manifest.
+359 silly tarball no local data for strip-json-comments@https://registry.npmjs.org/strip-json-comments/-/strip-json-comments-2.0.1.tgz. Extracting by manifest.
+360 silly tarball no local data for end-of-stream@https://registry.npmjs.org/end-of-stream/-/end-of-stream-1.4.5.tgz. Extracting by manifest.
+361 silly tarball no local data for rc@https://registry.npmjs.org/rc/-/rc-1.2.8.tgz. Extracting by manifest.
+362 silly tarball no local data for napi-build-utils@https://registry.npmjs.org/napi-build-utils/-/napi-build-utils-2.0.0.tgz. Extracting by manifest.
+363 silly tarball no local data for simple-get@https://registry.npmjs.org/simple-get/-/simple-get-4.0.1.tgz. Extracting by manifest.
+364 silly tarball no local data for expand-template@https://registry.npmjs.org/expand-template/-/expand-template-2.0.3.tgz. Extracting by manifest.
+365 silly tarball no local data for github-from-package@https://registry.npmjs.org/github-from-package/-/github-from-package-0.0.0.tgz. Extracting by manifest.
+366 silly tarball no local data for pump@https://registry.npmjs.org/pump/-/pump-3.0.4.tgz. Extracting by manifest.
+367 silly tarball no local data for prebuild-install@https://registry.npmjs.org/prebuild-install/-/prebuild-install-7.1.3.tgz. Extracting by manifest.
+368 silly tarball no local data for mkdirp-classic@https://registry.npmjs.org/mkdirp-classic/-/mkdirp-classic-0.5.3.tgz. Extracting by manifest.
+369 silly tarball no local data for bindings@https://registry.npmjs.org/bindings/-/bindings-1.5.0.tgz. Extracting by manifest.
+370 silly tarball no local data for file-uri-to-path@https://registry.npmjs.org/file-uri-to-path/-/file-uri-to-path-1.0.0.tgz. Extracting by manifest.
+371 silly tarball no local data for @prisma/driver-adapter-utils@https://registry.npmjs.org/@prisma/driver-adapter-utils/-/driver-adapter-utils-7.5.0.tgz. Extracting by manifest.
+372 silly tarball no local data for node-abi@https://registry.npmjs.org/node-abi/-/node-abi-3.89.0.tgz. Extracting by manifest.
+373 silly tarball no local data for better-sqlite3@https://registry.npmjs.org/better-sqlite3/-/better-sqlite3-12.8.0.tgz. Extracting by manifest.
+374 silly tarball no local data for tar-fs@https://registry.npmjs.org/tar-fs/-/tar-fs-2.1.4.tgz. Extracting by manifest.
+375 silly tarball no local data for @prisma/adapter-better-sqlite3@https://registry.npmjs.org/@prisma/adapter-better-sqlite3/-/adapter-better-sqlite3-7.5.0.tgz. Extracting by manifest.
+376 http fetch GET 200 https://registry.npmjs.org/ieee754/-/ieee754-1.2.1.tgz 51ms (cache miss)
+377 http fetch GET 200 https://registry.npmjs.org/string_decoder/-/string_decoder-1.3.0.tgz 60ms (cache miss)
+378 http fetch GET 200 https://registry.npmjs.org/util-deprecate/-/util-deprecate-1.0.2.tgz 61ms (cache miss)
+379 http fetch GET 200 https://registry.npmjs.org/buffer/-/buffer-5.7.1.tgz 61ms (cache miss)
+380 http fetch GET 200 https://registry.npmjs.org/base64-js/-/base64-js-1.5.1.tgz 75ms (cache miss)
+381 http fetch GET 200 https://registry.npmjs.org/inherits/-/inherits-2.0.4.tgz 84ms (cache miss)
+382 http fetch POST 200 https://registry.npmjs.org/-/npm/v1/security/advisories/bulk 119ms
+383 silly audit report {
+383 silly audit report   '@hono/node-server': [
+383 silly audit report     {
+383 silly audit report       id: 1114170,
+383 silly audit report       url: 'https://github.com/advisories/GHSA-wc8c-qw6v-h7f6',
+383 silly audit report       title: '@hono/node-server has authorization bypass for protected static paths via encoded slashes in Serve Static Middleware',
+383 silly audit report       severity: 'high',
+383 silly audit report       vulnerable_versions: '<1.19.10',
+383 silly audit report       cwe: [Array],
+383 silly audit report       cvss: [Object]
+383 silly audit report     }
+383 silly audit report   ],
+383 silly audit report   hono: [
+383 silly audit report     {
+383 silly audit report       id: 1112644,
+383 silly audit report       url: 'https://github.com/advisories/GHSA-9r54-q6cx-xmh5',
+383 silly audit report       title: 'Hono vulnerable to XSS through ErrorBoundary component ',
+383 silly audit report       severity: 'moderate',
+383 silly audit report       vulnerable_versions: '<4.11.7',
+383 silly audit report       cwe: [Array],
+383 silly audit report       cvss: [Object]
+383 silly audit report     },
+383 silly audit report     {
+383 silly audit report       id: 1112677,
+383 silly audit report       url: 'https://github.com/advisories/GHSA-6wqw-2p9w-4vw4',
+383 silly audit report       title: 'Hono cache middleware ignores "Cache-Control: private" leading to Web Cache Deception',
+383 silly audit report       severity: 'moderate',
+383 silly audit report       vulnerable_versions: '<4.11.7',
+383 silly audit report       cwe: [Array],
+383 silly audit report       cvss: [Object]
+383 silly audit report     },
+383 silly audit report     {
+383 silly audit report       id: 1112678,
+383 silly audit report       url: 'https://github.com/advisories/GHSA-r354-f388-2fhh',
+383 silly audit report       title: 'Hono IPv4 address validation bypass in IP Restriction Middleware allows IP spoofing',
+383 silly audit report       severity: 'moderate',
+383 silly audit report       vulnerable_versions: '<4.11.7',
+383 silly audit report       cwe: [Array],
+383 silly audit report       cvss: [Object]
+383 silly audit report     },
+383 silly audit report     {
+383 silly audit report       id: 1112911,
+383 silly audit report       url: 'https://github.com/advisories/GHSA-w332-q679-j88p',
+383 silly audit report       title: 'Hono has an Arbitrary Key Read in Serve static Middleware (Cloudflare Workers Adapter)',
+383 silly audit report       severity: 'moderate',
+383 silly audit report       vulnerable_versions: '<4.11.7',
+383 silly audit report       cwe: [Array],
+383 silly audit report       cvss: [Object]
+383 silly audit report     },
+383 silly audit report     {
+383 silly audit report       id: 1113311,
+383 silly audit report       url: 'https://github.com/advisories/GHSA-gq3j-xvxp-8hrf',
+383 silly audit report       title: 'Hono added timing comparison hardening in basicAuth and bearerAuth',
+383 silly audit report       severity: 'low',
+383 silly audit report       vulnerable_versions: '<4.11.10',
+383 silly audit report       cwe: [Array],
+383 silly audit report       cvss: [Object]
+383 silly audit report     },
+383 silly audit report     {
+383 silly audit report       id: 1114004,
+383 silly audit report       url: 'https://github.com/advisories/GHSA-5pq2-9x2x-5p6w',
+383 silly audit report       title: 'Hono Vulnerable to Cookie Attribute Injection via Unsanitized domain and path in setCookie()',
+383 silly audit report       severity: 'moderate',
+383 silly audit report       vulnerable_versions: '<4.12.4',
+383 silly audit report       cwe: [Array],
+383 silly audit report       cvss: [Object]
+383 silly audit report     },
+383 silly audit report     {
+383 silly audit report       id: 1114005,
+383 silly audit report       url: 'https://github.com/advisories/GHSA-p6xx-57qc-3wxr',
+383 silly audit report       title: 'Hono Vulnerable to SSE Control Field Injection via CR/LF in writeSSE()',
+383 silly audit report       severity: 'moderate',
+383 silly audit report       vulnerable_versions: '<4.12.4',
+383 silly audit report       cwe: [Array],
+383 silly audit report       cvss: [Object]
+383 silly audit report     },
+383 silly audit report     {
+383 silly audit report       id: 1114006,
+383 silly audit report       url: 'https://github.com/advisories/GHSA-q5qw-h33p-qvwr',
+383 silly audit report       title: 'Hono vulnerable to arbitrary file access via serveStatic vulnerability ',
+383 silly audit report       severity: 'high',
+383 silly audit report       vulnerable_versions: '<4.12.4',
+383 silly audit report       cwe: [Array],
+383 silly audit report       cvss: [Object]
+383 silly audit report     },
+383 silly audit report     {
+383 silly audit report       id: 1114341,
+383 silly audit report       url: 'https://github.com/advisories/GHSA-v8w9-8mx6-g223',
+383 silly audit report       title: 'Hono vulnerable to Prototype Pollution possible through __proto__ key allowed in parseBody({ dot: true })',
+383 silly audit report       severity: 'moderate',
+383 silly audit report       vulnerable_versions: '<4.12.7',
+383 silly audit report       cwe: [Array],
+383 silly audit report       cvss: [Object]
+383 silly audit report     }
+383 silly audit report   ],
+383 silly audit report   lodash: [
+383 silly audit report     {
+383 silly audit report       id: 1112455,
+383 silly audit report       url: 'https://github.com/advisories/GHSA-xxjr-mmjv-4gpg',
+383 silly audit report       title: 'Lodash has Prototype Pollution Vulnerability in `_.unset` and `_.omit` functions',
+383 silly audit report       severity: 'moderate',
+383 silly audit report       vulnerable_versions: '>=4.0.0 <=4.17.22',
+383 silly audit report       cwe: [Array],
+383 silly audit report       cvss: [Object]
+383 silly audit report     }
+383 silly audit report   ]
+383 silly audit report }
+384 silly packumentCache corgi:https://registry.npmjs.org/@hono%2fnode-server cache-miss
+385 silly packumentCache corgi:https://registry.npmjs.org/hono cache-miss
+386 silly packumentCache corgi:https://registry.npmjs.org/lodash cache-miss
+387 http fetch GET 200 https://registry.npmjs.org/fs-constants/-/fs-constants-1.0.0.tgz 112ms (cache miss)
+388 http fetch GET 200 https://registry.npmjs.org/wrappy/-/wrappy-1.0.2.tgz 111ms (cache miss)
+389 http fetch GET 200 https://registry.npmjs.org/ini/-/ini-1.3.8.tgz 111ms (cache miss)
+390 http fetch GET 200 https://registry.npmjs.org/once/-/once-1.4.0.tgz 113ms (cache miss)
+391 http fetch GET 200 https://registry.npmjs.org/tunnel-agent/-/tunnel-agent-0.6.0.tgz 113ms (cache miss)
+392 http fetch GET 200 https://registry.npmjs.org/strip-json-comments/-/strip-json-comments-2.0.1.tgz 118ms (cache miss)
+393 http fetch GET 200 https://registry.npmjs.org/decompress-response/-/decompress-response-6.0.0.tgz 136ms (cache miss)
+394 http fetch GET 200 https://registry.npmjs.org/mimic-response/-/mimic-response-3.1.0.tgz 138ms (cache miss)
+395 http fetch GET 200 https://registry.npmjs.org/napi-build-utils/-/napi-build-utils-2.0.0.tgz 141ms (cache miss)
+396 http fetch GET 200 https://registry.npmjs.org/tar-stream/-/tar-stream-2.2.0.tgz 149ms (cache miss)
+397 http fetch GET 200 https://registry.npmjs.org/rc/-/rc-1.2.8.tgz 150ms (cache miss)
+398 http fetch GET 200 https://registry.npmjs.org/end-of-stream/-/end-of-stream-1.4.5.tgz 152ms (cache miss)
+399 http fetch GET 200 https://registry.npmjs.org/simple-get/-/simple-get-4.0.1.tgz 153ms (cache miss)
+400 http fetch GET 200 https://registry.npmjs.org/deep-extend/-/deep-extend-0.6.0.tgz 156ms (cache miss)
+401 http fetch GET 200 https://registry.npmjs.org/simple-concat/-/simple-concat-1.0.1.tgz 156ms (cache miss)
+402 http fetch GET 200 https://registry.npmjs.org/pump/-/pump-3.0.4.tgz 155ms (cache miss)
+403 http fetch GET 200 https://registry.npmjs.org/expand-template/-/expand-template-2.0.3.tgz 156ms (cache miss)
+404 http fetch GET 200 https://registry.npmjs.org/chownr/-/chownr-1.1.4.tgz 159ms (cache miss)
+405 http fetch GET 200 https://registry.npmjs.org/readable-stream/-/readable-stream-3.6.2.tgz 165ms (cache miss)
+406 http fetch GET 200 https://registry.npmjs.org/github-from-package/-/github-from-package-0.0.0.tgz 172ms (cache miss)
+407 http fetch GET 200 https://registry.npmjs.org/bl/-/bl-4.1.0.tgz 183ms (cache miss)
+408 http fetch GET 200 https://registry.npmjs.org/bindings/-/bindings-1.5.0.tgz 182ms (cache miss)
+409 http fetch GET 200 https://registry.npmjs.org/prebuild-install/-/prebuild-install-7.1.3.tgz 182ms (cache miss)
+410 warn deprecated prebuild-install@7.1.3: No longer maintained. Please contact the author of the relevant native addon; alternatives are available.
+411 http fetch GET 200 https://registry.npmjs.org/file-uri-to-path/-/file-uri-to-path-1.0.0.tgz 182ms (cache miss)
+412 http fetch GET 200 https://registry.npmjs.org/mkdirp-classic/-/mkdirp-classic-0.5.3.tgz 189ms (cache miss)
+413 http fetch GET 200 https://registry.npmjs.org/lodash 95ms (cache revalidated)
+414 silly packumentCache corgi:https://registry.npmjs.org/lodash set size:68481 disposed:false
+415 http fetch GET 200 https://registry.npmjs.org/tar-fs/-/tar-fs-2.1.4.tgz 195ms (cache miss)
+416 http fetch GET 200 https://registry.npmjs.org/hono 101ms (cache revalidated)
+417 silly packumentCache corgi:https://registry.npmjs.org/hono set size:680738 disposed:false
+418 http fetch GET 200 https://registry.npmjs.org/@hono%2fnode-server 116ms (cache revalidated)
+419 silly packumentCache corgi:https://registry.npmjs.org/@hono%2fnode-server set size:82566 disposed:false
+420 silly packumentCache corgi:https://registry.npmjs.org/@prisma%2fdev cache-miss
+421 http fetch GET 200 https://registry.npmjs.org/@prisma/driver-adapter-utils/-/driver-adapter-utils-7.5.0.tgz 215ms (cache miss)
+422 http fetch GET 200 https://registry.npmjs.org/node-abi/-/node-abi-3.89.0.tgz 215ms (cache miss)
+423 http fetch GET 200 https://registry.npmjs.org/@prisma/adapter-better-sqlite3/-/adapter-better-sqlite3-7.5.0.tgz 249ms (cache miss)
+424 http fetch GET 200 https://registry.npmjs.org/@prisma%2fdev 89ms (cache revalidated)
+425 silly packumentCache corgi:https://registry.npmjs.org/@prisma%2fdev set size:946495 disposed:false
+426 silly packumentCache corgi:https://registry.npmjs.org/@chevrotain%2fcst-dts-gen cache-miss
+427 silly packumentCache corgi:https://registry.npmjs.org/@chevrotain%2fgast cache-miss
+428 silly packumentCache corgi:https://registry.npmjs.org/chevrotain cache-miss
+429 http fetch GET 200 https://registry.npmjs.org/better-sqlite3/-/better-sqlite3-12.8.0.tgz 361ms (cache miss)
+430 info run better-sqlite3@12.8.0 install node_modules/better-sqlite3 prebuild-install || node-gyp rebuild --release
+431 http fetch GET 200 https://registry.npmjs.org/chevrotain 49ms (cache revalidated)
+432 silly packumentCache corgi:https://registry.npmjs.org/chevrotain set size:274286 disposed:false
+433 http fetch GET 200 https://registry.npmjs.org/@chevrotain%2fcst-dts-gen 73ms (cache revalidated)
+434 silly packumentCache corgi:https://registry.npmjs.org/@chevrotain%2fcst-dts-gen set size:24893 disposed:false
+435 http fetch GET 200 https://registry.npmjs.org/@chevrotain%2fgast 76ms (cache revalidated)
+436 silly packumentCache corgi:https://registry.npmjs.org/@chevrotain%2fgast set size:20755 disposed:false
+437 silly packumentCache corgi:https://registry.npmjs.org/prisma cache-miss
+438 http fetch GET 200 https://registry.npmjs.org/prisma 76ms (cache revalidated)
+439 silly packumentCache corgi:https://registry.npmjs.org/prisma set size:22619498 disposed:false
+440 silly packumentCache corgi:https://registry.npmjs.org/@mrleebo%2fprisma-ast cache-miss
+441 http fetch GET 200 https://registry.npmjs.org/@mrleebo%2fprisma-ast 57ms (cache revalidated)
+442 silly packumentCache corgi:https://registry.npmjs.org/@mrleebo%2fprisma-ast set size:48284 disposed:false
+443 silly packumentCache corgi:https://registry.npmjs.org/@prisma%2fclient cache-miss
+444 http fetch GET 200 https://registry.npmjs.org/@prisma%2fclient 207ms (cache revalidated)
+445 silly packumentCache corgi:https://registry.npmjs.org/@prisma%2fclient set size:37508953 disposed:false
+446 info run better-sqlite3@12.8.0 install { code: 1, signal: null }
+447 verbose stack Error: command failed
+447 verbose stack     at promiseSpawn (/Users/ayomidelawal/.nvm/versions/node/v20.20.1/lib/node_modules/npm/node_modules/@npmcli/promise-spawn/lib/index.js:22:22)
+447 verbose stack     at spawnWithShell (/Users/ayomidelawal/.nvm/versions/node/v20.20.1/lib/node_modules/npm/node_modules/@npmcli/promise-spawn/lib/index.js:124:10)
+447 verbose stack     at promiseSpawn (/Users/ayomidelawal/.nvm/versions/node/v20.20.1/lib/node_modules/npm/node_modules/@npmcli/promise-spawn/lib/index.js:12:12)
+447 verbose stack     at runScriptPkg (/Users/ayomidelawal/.nvm/versions/node/v20.20.1/lib/node_modules/npm/node_modules/@npmcli/run-script/lib/run-script-pkg.js:77:13)
+447 verbose stack     at runScript (/Users/ayomidelawal/.nvm/versions/node/v20.20.1/lib/node_modules/npm/node_modules/@npmcli/run-script/lib/run-script.js:9:12)
+447 verbose stack     at /Users/ayomidelawal/.nvm/versions/node/v20.20.1/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/arborist/rebuild.js:329:17
+447 verbose stack     at run (/Users/ayomidelawal/.nvm/versions/node/v20.20.1/lib/node_modules/npm/node_modules/promise-call-limit/dist/commonjs/index.js:67:22)
+447 verbose stack     at /Users/ayomidelawal/.nvm/versions/node/v20.20.1/lib/node_modules/npm/node_modules/promise-call-limit/dist/commonjs/index.js:84:9
+447 verbose stack     at new Promise (<anonymous>)
+447 verbose stack     at callLimit (/Users/ayomidelawal/.nvm/versions/node/v20.20.1/lib/node_modules/npm/node_modules/promise-call-limit/dist/commonjs/index.js:35:69)
+448 verbose pkgid better-sqlite3@12.8.0
+449 error code 1
+450 error path /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/better-sqlite3
+451 error command failed
+452 error command sh -c prebuild-install || node-gyp rebuild --release
+453 error TOUCH ba23eeee118cd63e16015df367567cb043fed872.intermediate
+453 error   ACTION deps_sqlite3_gyp_locate_sqlite3_target_copy_builtin_sqlite3 ba23eeee118cd63e16015df367567cb043fed872.intermediate
+453 error   TOUCH Release/obj.target/deps/locate_sqlite3.stamp
+453 error   CC(target) Release/obj.target/sqlite3/gen/sqlite3/sqlite3.o
+453 error   LIBTOOL-STATIC Release/sqlite3.a
+453 error   CXX(target) Release/obj.target/better_sqlite3/src/better_sqlite3.o
+453 error rm ba23eeee118cd63e16015df367567cb043fed872.intermediate
+454 error prebuild-install warn install EPERM: operation not permitted, access '/Users/ayomidelawal/.npm'
+454 error gyp info it worked if it ends with ok
+454 error gyp info using node-gyp@10.1.0
+454 error gyp info using node@20.20.1 | darwin | arm64
+454 error gyp info find Python using Python version 3.13.5 found at "/opt/homebrew/opt/python@3.13/bin/python3.13"
+454 error gyp http GET https://nodejs.org/download/release/v20.20.1/node-v20.20.1-headers.tar.gz
+454 error gyp http 200 https://nodejs.org/download/release/v20.20.1/node-v20.20.1-headers.tar.gz
+454 error gyp http GET https://nodejs.org/download/release/v20.20.1/SHASUMS256.txt
+454 error gyp http 200 https://nodejs.org/download/release/v20.20.1/SHASUMS256.txt
+454 error gyp info spawn /opt/homebrew/opt/python@3.13/bin/python3.13
+454 error gyp info spawn args [
+454 error gyp info spawn args '/Users/ayomidelawal/.nvm/versions/node/v20.20.1/lib/node_modules/npm/node_modules/node-gyp/gyp/gyp_main.py',
+454 error gyp info spawn args 'binding.gyp',
+454 error gyp info spawn args '-f',
+454 error gyp info spawn args 'make',
+454 error gyp info spawn args '-I',
+454 error gyp info spawn args '/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/better-sqlite3/build/config.gypi',
+454 error gyp info spawn args '-I',
+454 error gyp info spawn args '/Users/ayomidelawal/.nvm/versions/node/v20.20.1/lib/node_modules/npm/node_modules/node-gyp/addon.gypi',
+454 error gyp info spawn args '-I',
+454 error gyp info spawn args '/var/folders/5g/f513y5kd64sch0gr4f8_1vy80000gn/T/cursor-sandbox-cache/17d6452fb06b404a3aa55b8d5e849870/node-gyp/20.20.1/include/node/common.gypi',
+454 error gyp info spawn args '-Dlibrary=shared_library',
+454 error gyp info spawn args '-Dvisibility=default',
+454 error gyp info spawn args '-Dnode_root_dir=/var/folders/5g/f513y5kd64sch0gr4f8_1vy80000gn/T/cursor-sandbox-cache/17d6452fb06b404a3aa55b8d5e849870/node-gyp/20.20.1',
+454 error gyp info spawn args '-Dnode_gyp_dir=/Users/ayomidelawal/.nvm/versions/node/v20.20.1/lib/node_modules/npm/node_modules/node-gyp',
+454 error gyp info spawn args '-Dnode_lib_file=/var/folders/5g/f513y5kd64sch0gr4f8_1vy80000gn/T/cursor-sandbox-cache/17d6452fb06b404a3aa55b8d5e849870/node-gyp/20.20.1/<(target_arch)/node.lib',
+454 error gyp info spawn args '-Dmodule_root_dir=/Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/better-sqlite3',
+454 error gyp info spawn args '-Dnode_engine=v8',
+454 error gyp info spawn args '--depth=.',
+454 error gyp info spawn args '--no-parallel',
+454 error gyp info spawn args '--generator-output',
+454 error gyp info spawn args 'build',
+454 error gyp info spawn args '-Goutput_dir=.'
+454 error gyp info spawn args ]
+454 error gyp info spawn make
+454 error gyp info spawn args [ 'BUILDTYPE=Release', '-C', 'build' ]
+454 error /bin/sh: dental/clinic-app/node_modules/better-sqlite3/build/Release/lib.host:/Users/ayomidelawal/Downloads/yinlade: No such file or directory
+454 error mkdir: /Users/ayomidelawal/Downloads/yinlade: Operation not permitted
+454 error ../src/better_sqlite3.cpp:1:10: fatal error: 'climits' file not found
+454 error     1 | #include <climits>
+454 error       |          ^~~~~~~~~
+454 error 1 error generated.
+454 error make: *** [Release/obj.target/better_sqlite3/src/better_sqlite3.o] Error 1
+454 error gyp ERR! build error 
+454 error gyp ERR! stack Error: `make` failed with exit code: 2
+454 error gyp ERR! stack at ChildProcess.<anonymous> (/Users/ayomidelawal/.nvm/versions/node/v20.20.1/lib/node_modules/npm/node_modules/node-gyp/lib/build.js:209:23)
+454 error gyp ERR! System Darwin 24.6.0
+454 error gyp ERR! command "/Users/ayomidelawal/.nvm/versions/node/v20.20.1/bin/node" "/Users/ayomidelawal/.nvm/versions/node/v20.20.1/lib/node_modules/npm/node_modules/node-gyp/bin/node-gyp.js" "rebuild" "--release"
+454 error gyp ERR! cwd /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/node_modules/better-sqlite3
+454 error gyp ERR! node -v v20.20.1
+454 error gyp ERR! node-gyp -v v10.1.0
+454 error gyp ERR! not ok
+455 silly unfinished npm timer reify 1773951286248
+456 silly unfinished npm timer reify:build 1773951288144
+457 silly unfinished npm timer build 1773951288144
+458 silly unfinished npm timer build:deps 1773951288144
+459 silly unfinished npm timer build:run:install 1773951288148
+460 silly unfinished npm timer build:run:install:node_modules/better-sqlite3 1773951288148
+461 verbose cwd /Users/ayomidelawal/Downloads/yinlade dental/clinic-app
+462 verbose os Darwin 24.6.0
+463 verbose node v20.20.1
+464 verbose npm  v10.8.2
+465 verbose exit 1
+466 verbose code 1
+467 error A complete log of this run can be found in: /Users/ayomidelawal/Downloads/yinlade dental/clinic-app/.npm-cache/_logs/2026-03-19T20_14_45_878Z-debug-0.log
