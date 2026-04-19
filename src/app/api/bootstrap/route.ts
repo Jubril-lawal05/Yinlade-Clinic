@@ -34,7 +34,7 @@ export async function GET() {
   // Build clinical records with treatment notes
   const noteSnaps = await Promise.all(
     crSnap.docs.map((cr) =>
-      db.collection("treatmentNotes").where("patientId", "==", cr.data().patientId).get()
+      db.collection("treatmentNotes").where("patientId", "==", cr.id).get()
     )
   );
 
@@ -51,7 +51,7 @@ export async function GET() {
         followUp: nd.followUp || "",
       };
     });
-    clinical[c.patientId] = {
+    clinical[cr.id] = {
       odontogram: c.odontogram || {}, complaint: c.complaint || "",
       bp: c.bp || "", pulse: c.pulse || "", temp: c.temp || "",
       resp: c.resp || "", extraOral: c.extraOral || "",
