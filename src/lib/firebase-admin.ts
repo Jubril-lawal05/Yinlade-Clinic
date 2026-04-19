@@ -3,6 +3,18 @@ import { getFirestore, FieldValue, Timestamp } from "firebase-admin/firestore";
 
 function getAdminApp() {
   if (getApps().length > 0) return getApp();
+
+  // Prefer full JSON service account (most reliable on Vercel)
+  if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+    try {
+      const sa = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+      return initializeApp({ credential: cert(sa) });
+    } catch (e) {
+      throw new Error(`Failed to parse FIREBASE_SERVICE_ACCOUNT: ${e instanceof Error ? e.message : String(e)}`);
+    }
+  }
+
+  // Fallback: individual env vars
   const projectId = process.env.FIREBASE_PROJECT_ID;
   const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
   const rawKey = process.env.FIREBASE_PRIVATE_KEY;
@@ -11,7 +23,6 @@ function getAdminApp() {
     throw new Error(`Missing Firebase credentials: projectId=${!!projectId} clientEmail=${!!clientEmail} privateKey=${!!rawKey}`);
   }
 
-  // Handle both literal \n (from Vercel env vars) and actual newlines
   const privateKey = rawKey.includes("\\n") ? rawKey.replace(/\\n/g, "\n") : rawKey;
 
   try {
