@@ -11,6 +11,7 @@ function decToNumber(d: any) {
 }
 
 export async function GET() {
+  try {
   const staff = await getAuthedStaff();
   if (!staff) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
@@ -107,4 +108,8 @@ export async function GET() {
       };
     }),
   });
+  } catch (e) {
+    console.error("[bootstrap] error:", e);
+    return NextResponse.json({ error: String(e instanceof Error ? e.message : e) }, { status: 500 });
+  }
 }
