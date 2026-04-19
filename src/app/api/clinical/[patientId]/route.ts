@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { prisma } from "@/lib/prisma";
+import { db, FieldValue } from "@/lib/firebase-admin";
 import { getAuthedStaff } from "@/lib/auth";
 
 const Odonto = z.record(z.string(), z.array(z.string()));
@@ -34,27 +34,23 @@ export async function GET(_req: Request, { params }: { params: Promise<{ patient
   if (!staff) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { patientId } = await params;
-  const cr = await prisma.clinicalRecord.findUnique({
-    where: { patientId },
-    include: {
-      treatmentNotes: {
-        orderBy: { date: "desc" },
-        select: {
-          id: true, date: true, procedure: true, teeth: true,
-          description: true, medications: true, followUp: true,
-          createdBy: { select: { name: true } },
-        },
-      },
-    },
-  });
+  const [crDoc, noteSnap, staffSnap] = await Promise.all([
+    db.collection("clinicalRecords").doc(patientId).get(),
+    db.collection("treatmentNotes").where("patientId", "==", patientId).orderBy("date", "desc").get(),
+    db.collection("staff").get(),
+  ]);
 
-  if (!cr) {
+  const staffMap = new Map<string, string>();
+  staffSnap.docs.forEach((d) => staffMap.set(d.id, d.data().name));
+
+  if (!crDoc.exists) {
     return NextResponse.json({
       odontogram: {}, complaint: "", bp: "", pulse: "", temp: "",
       resp: "", extraOral: "", intraOral: "", occlusion: "", notes: [],
     });
   }
 
+  const cr = crDoc.data()!;
   return NextResponse.json({
     odontogram: cr.odontogram || {},
     complaint: cr.complaint || "",
@@ -65,16 +61,16 @@ export async function GET(_req: Request, { params }: { params: Promise<{ patient
     extraOral: cr.extraOral || "",
     intraOral: cr.intraOral || "",
     occlusion: cr.occlusion || "",
-    notes: cr.treatmentNotes.map((n) => ({
-      id: n.id,
-      date: n.date.toISOString().slice(0, 10),
-      dentist: n.createdBy.name,
-      procedure: n.procedure,
-      teeth: n.teeth || "",
-      description: n.description || "",
-      medications: n.medications || "",
-      followUp: n.followUp || "",
-    })),
+    notes: noteSnap.docs.map((d) => {
+      const n = d.data();
+      return {
+        id: d.id, date: n.date || "",
+        dentist: staffMap.get(n.createdById) || "",
+        procedure: n.procedure, teeth: n.teeth || "",
+        description: n.description || "", medications: n.medications || "",
+        followUp: n.followUp || "",
+      };
+    }),
   });
 }
 
@@ -88,51 +84,45 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ patien
   const body = ClinicalBody.safeParse(json);
   if (!body.success) return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
 
-  await prisma.$transaction(async (tx) => {
-    const cr = await tx.clinicalRecord.upsert({
-      where: { patientId },
-      create: {
-        patientId,
-        odontogram: body.data.odontogram,
-        complaint: body.data.complaint || "",
-        bp: body.data.bp || null,
-        pulse: body.data.pulse || null,
-        temp: body.data.temp || null,
-        resp: body.data.resp || null,
-        extraOral: body.data.extraOral || null,
-        intraOral: body.data.intraOral || null,
-        occlusion: body.data.occlusion || null,
-      },
-      update: {
-        odontogram: body.data.odontogram,
-        complaint: body.data.complaint || "",
-        bp: body.data.bp || null,
-        pulse: body.data.pulse || null,
-        temp: body.data.temp || null,
-        resp: body.data.resp || null,
-        extraOral: body.data.extraOral || null,
-        intraOral: body.data.intraOral || null,
-        occlusion: body.data.occlusion || null,
-      },
+  const crRef = db.collection("clinicalRecords").doc(patientId);
+  await crRef.set({
+    patientId,
+    odontogram: body.data.odontogram,
+    complaint: body.data.complaint,
+    bp: body.data.bp || null,
+    pulse: body.data.pulse || null,
+    temp: body.data.temp || null,
+    resp: body.data.resp || null,
+    extraOral: body.data.extraOral || null,
+    intraOral: body.data.intraOral || null,
+    occlusion: body.data.occlusion || null,
+    updatedAt: FieldValue.serverTimestamp(),
+  }, { merge: false });
+
+  const existingNotes = await db.collection("treatmentNotes").where("patientId", "==", patientId).get();
+  const batch = db.batch();
+  existingNotes.docs.forEach((d) => batch.delete(d.ref));
+
+  for (const n of body.data.notes) {
+    const ref = db.collection("treatmentNotes").doc(n.id);
+    batch.set(ref, {
+      patientId,
+      createdById: staff.id,
+      date: n.date,
+      procedure: n.procedure,
+      teeth: n.teeth || null,
+      description: n.description || null,
+      medications: n.medications || null,
+      followUp: n.followUp || null,
+      createdAt: FieldValue.serverTimestamp(),
     });
+  }
 
-    await tx.treatmentNote.deleteMany({ where: { patientId } });
+  await batch.commit();
 
-    if (body.data.notes.length > 0) {
-      await tx.treatmentNote.createMany({
-        data: body.data.notes.map((n) => ({
-          patientId,
-          clinicalRecordId: cr.id,
-          createdById: staff.id,
-          date: new Date(n.date + "T00:00:00.000Z"),
-          procedure: n.procedure,
-          teeth: n.teeth || null,
-          description: n.description || null,
-          medications: n.medications || null,
-          followUp: n.followUp || null,
-        })),
-      });
-    }
+  // Update patient lastVisit
+  await db.collection("patients").doc(patientId).update({
+    lastVisit: new Date().toISOString().slice(0, 10),
   });
 
   return NextResponse.json({ ok: true });

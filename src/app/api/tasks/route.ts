@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { prisma } from "@/lib/prisma";
+import { db, FieldValue } from "@/lib/firebase-admin";
 import { getAuthedStaff } from "@/lib/auth";
 
 const CreateTask = z.object({
@@ -15,19 +15,22 @@ export async function GET() {
   const staff = await getAuthedStaff();
   if (!staff) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const tasks = await prisma.task.findMany({
-    orderBy: { due: "asc" },
-    select: {
-      id: true, title: true, priority: true, due: true, done: true,
-      assignedTo: { select: { name: true } },
-    },
-  });
+  const [taskSnap, staffSnap] = await Promise.all([
+    db.collection("tasks").orderBy("due", "asc").get(),
+    db.collection("staff").get(),
+  ]);
+
+  const staffMap = new Map<string, string>();
+  staffSnap.docs.forEach((d) => staffMap.set(d.id, d.data().name));
 
   return NextResponse.json({
-    tasks: tasks.map((t) => ({
-      id: t.id, title: t.title, priority: t.priority,
-      due: t.due.toISOString().slice(0, 10), done: t.done, who: t.assignedTo?.name || "",
-    })),
+    tasks: taskSnap.docs.map((d) => {
+      const t = d.data();
+      return {
+        id: d.id, title: t.title, priority: t.priority,
+        due: t.due, done: t.done || false, who: staffMap.get(t.assignedToId) || "",
+      };
+    }),
   });
 }
 
@@ -39,15 +42,14 @@ export async function POST(req: Request) {
   const body = CreateTask.safeParse(json);
   if (!body.success) return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
 
-  const created = await prisma.task.create({
-    data: {
-      title: body.data.title,
-      priority: body.data.priority,
-      due: new Date(body.data.due + "T00:00:00.000Z"),
-      done: body.data.done ?? false,
-      assignedToId: body.data.assignedToId || null,
-    },
+  const docRef = await db.collection("tasks").add({
+    title: body.data.title,
+    priority: body.data.priority,
+    due: body.data.due,
+    done: body.data.done ?? false,
+    assignedToId: body.data.assignedToId || null,
+    createdAt: FieldValue.serverTimestamp(),
   });
 
-  return NextResponse.json({ task: { id: created.id } });
+  return NextResponse.json({ task: { id: docRef.id } });
 }

@@ -1,7 +1,7 @@
 import { sign, verify } from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { z } from "zod";
-import { prisma } from "./prisma";
+import { db } from "./firebase-admin";
 
 const JwtPayload = z.object({
   sub: z.string(),
@@ -42,13 +42,11 @@ export async function getAuthedStaff(): Promise<AuthedStaff | null> {
     const decoded = verify(token, secret);
     const parsed = JwtPayload.parse(decoded);
 
-    const staff = await prisma.staff.findUnique({
-      where: { id: parsed.sub },
-      select: { id: true, name: true, role: true, email: true, avatar: true },
-    });
+    const doc = await db.collection("staff").doc(parsed.sub).get();
+    if (!doc.exists) return null;
 
-    if (!staff) return null;
-    return staff;
+    const s = doc.data()!;
+    return { id: doc.id, name: s.name, role: s.role, email: s.email, avatar: s.avatar };
   } catch {
     return null;
   }

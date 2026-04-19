@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
-import { prisma } from "@/lib/prisma";
+import { db } from "@/lib/firebase-admin";
 import { getJwtCookieName, signAuthToken } from "@/lib/auth";
 
 const Body = z.object({
@@ -25,19 +25,19 @@ export async function POST(req: Request) {
   const body = Body.safeParse(json);
   if (!body.success) return NextResponse.json({ error: "Invalid request" }, { status: 400 });
 
-  const staff = await prisma.staff.findUnique({
-    where: { email: body.data.email },
-    select: { id: true, name: true, role: true, email: true, avatar: true, passwordHash: true },
-  });
-  if (!staff) return NextResponse.json({ error: "Incorrect email or password" }, { status: 401 });
+  const snap = await db.collection("staff").where("email", "==", body.data.email).limit(1).get();
+  if (snap.empty) return NextResponse.json({ error: "Incorrect email or password" }, { status: 401 });
+
+  const doc = snap.docs[0];
+  const staff = doc.data();
 
   const ok = await bcrypt.compare(body.data.password, staff.passwordHash);
   if (!ok) return NextResponse.json({ error: "Incorrect email or password" }, { status: 401 });
 
-  const token = signAuthToken({ sub: staff.id, role: staff.role, name: staff.name });
+  const token = signAuthToken({ sub: doc.id, role: staff.role, name: staff.name });
 
   const res = NextResponse.json({
-    user: { id: staff.id, name: staff.name, role: staff.role, email: staff.email, avatar: staff.avatar },
+    user: { id: doc.id, name: staff.name, role: staff.role, email: staff.email, avatar: staff.avatar },
   });
 
   const maxAge = parseMaxAge(process.env.JWT_EXPIRES_IN);

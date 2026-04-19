@@ -1,18 +1,19 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { prisma } from "@/lib/prisma";
+import { db, FieldValue } from "@/lib/firebase-admin";
 import { getAuthedStaff } from "@/lib/auth";
 
 const Body = z.object({
   amount: z.union([z.string(), z.number()]),
 });
 
-function decToNumber(d: any) {
-  if (d == null) return 0;
-  if (typeof d === "number") return d;
-  if (typeof d === "string") return Number(d);
-  if (typeof d === "object" && typeof d.toNumber === "function") return d.toNumber();
-  return Number(d);
+async function recalcPatientBalance(patientId: string) {
+  const invSnap = await db.collection("invoices").where("patientId", "==", patientId).get();
+  const outstanding = invSnap.docs.reduce((sum, d) => {
+    const i = d.data();
+    return sum + ((i.total || 0) - (i.paid || 0));
+  }, 0);
+  await db.collection("patients").doc(patientId).update({ balance: outstanding });
 }
 
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -30,27 +31,23 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     return NextResponse.json({ error: "Invalid amount" }, { status: 400 });
 
   const { id } = await params;
-  const inv = await prisma.invoice.findUnique({ where: { id } });
-  if (!inv) return NextResponse.json({ error: "Invoice not found" }, { status: 404 });
+  const invDoc = await db.collection("invoices").doc(id).get();
+  if (!invDoc.exists) return NextResponse.json({ error: "Invoice not found" }, { status: 404 });
 
-  const total = decToNumber(inv.total);
-  const paid = decToNumber(inv.paid);
-  const newPaid = Math.min(paid + amountNum, total);
-  const status = newPaid >= total ? "paid" : newPaid > 0 ? "partial" : "unpaid";
+  const inv = invDoc.data()!;
+  const newPaid = Math.min((inv.paid || 0) + amountNum, inv.total || 0);
+  const status = newPaid >= (inv.total || 0) ? "paid" : newPaid > 0 ? "partial" : "unpaid";
 
-  await prisma.$transaction([
-    prisma.payment.create({
-      data: { invoiceId: id, amount: amountNum, recordedById: staff.id },
+  await Promise.all([
+    db.collection("payments").add({
+      invoiceId: id,
+      amount: amountNum,
+      recordedById: staff.id,
+      createdAt: FieldValue.serverTimestamp(),
     }),
-    prisma.invoice.update({ where: { id }, data: { paid: newPaid, status } }),
+    db.collection("invoices").doc(id).update({ paid: newPaid, status }),
   ]);
 
-  const invoices = await prisma.invoice.findMany({
-    where: { patientId: inv.patientId },
-    select: { total: true, paid: true },
-  });
-  const balance = invoices.reduce((s, i) => s + decToNumber(i.total) - decToNumber(i.paid), 0);
-  await prisma.patient.update({ where: { id: inv.patientId }, data: { balance } });
-
+  await recalcPatientBalance(inv.patientId);
   return NextResponse.json({ ok: true });
 }

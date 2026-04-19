@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { prisma } from "@/lib/prisma";
+import { db } from "@/lib/firebase-admin";
 import { getAuthedStaff } from "@/lib/auth";
 
 const Body = z.object({
@@ -18,7 +18,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
   if (!body.success) return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
 
   const { id } = await params;
-  await prisma.appointment.update({ where: { id }, data: { status: body.data.status } });
+  await db.collection("appointments").doc(id).update({ status: body.data.status });
   return NextResponse.json({ ok: true });
 }
 
@@ -29,6 +29,6 @@ export async function DELETE(_req: Request, { params }: { params: Promise<{ id: 
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   const { id } = await params;
-  await prisma.appointment.delete({ where: { id } });
+  await db.collection("appointments").doc(id).delete();
   return NextResponse.json({ ok: true });
 }

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { prisma } from "@/lib/prisma";
+import { db, FieldValue, tsToYMD } from "@/lib/firebase-admin";
 import { getAuthedStaff } from "@/lib/auth";
 
 const Body = z.object({
@@ -13,22 +13,26 @@ export async function GET() {
   const staff = await getAuthedStaff();
   if (!staff) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const messages = await prisma.message.findMany({
-    orderBy: { createdAt: "desc" },
-    select: {
-      id: true, patientId: true, type: true, content: true, createdAt: true,
-      patient: { select: { name: true } },
-      sender: { select: { name: true } },
-    },
-  });
+  const [msgSnap, patientSnap, staffSnap] = await Promise.all([
+    db.collection("messages").orderBy("createdAt", "desc").get(),
+    db.collection("patients").get(),
+    db.collection("staff").get(),
+  ]);
+
+  const patientMap = new Map<string, string>();
+  patientSnap.docs.forEach((d) => patientMap.set(d.id, d.data().name));
+  const staffMap = new Map<string, string>();
+  staffSnap.docs.forEach((d) => staffMap.set(d.id, d.data().name));
 
   return NextResponse.json({
-    messages: messages.map((m) => ({
-      id: m.id, patientId: m.patientId, patient: m.patient.name,
-      type: m.type === "FollowUp" ? "Follow-up" : m.type,
-      content: m.content, date: m.createdAt.toISOString().slice(0, 10),
-      sender: m.sender?.name || "",
-    })),
+    messages: msgSnap.docs.map((d) => {
+      const m = d.data();
+      return {
+        id: d.id, patientId: m.patientId, patient: patientMap.get(m.patientId) || "",
+        type: m.type === "FollowUp" ? "Follow-up" : m.type,
+        content: m.content, date: tsToYMD(m.createdAt), sender: staffMap.get(m.senderId) || "",
+      };
+    }),
   });
 }
 
@@ -42,14 +46,13 @@ export async function POST(req: Request) {
   const body = Body.safeParse(json);
   if (!body.success) return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
 
-  const created = await prisma.message.create({
-    data: {
-      patientId: body.data.patientId,
-      senderId: staff.id,
-      type: body.data.type === "Follow-up" ? "FollowUp" : (body.data.type as any),
-      content: body.data.content,
-    },
+  const docRef = await db.collection("messages").add({
+    patientId: body.data.patientId,
+    senderId: staff.id,
+    type: body.data.type === "Follow-up" ? "FollowUp" : body.data.type,
+    content: body.data.content,
+    createdAt: FieldValue.serverTimestamp(),
   });
 
-  return NextResponse.json({ message: { id: created.id } });
+  return NextResponse.json({ message: { id: docRef.id } });
 }

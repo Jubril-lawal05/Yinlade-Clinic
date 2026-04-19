@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { prisma } from "@/lib/prisma";
+import { db } from "@/lib/firebase-admin";
 import { getAuthedStaff } from "@/lib/auth";
 
 const PatchBody = z.object({
@@ -19,7 +19,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
   const update: Record<string, any> = {};
   if (body.data.done !== undefined) update.done = body.data.done;
 
-  await prisma.task.update({ where: { id }, data: update });
+  await db.collection("tasks").doc(id).update(update);
   return NextResponse.json({ ok: true });
 }
 
@@ -28,6 +28,6 @@ export async function DELETE(_req: Request, { params }: { params: Promise<{ id: 
   if (!staff) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { id } = await params;
-  await prisma.task.delete({ where: { id } });
+  await db.collection("tasks").doc(id).delete();
   return NextResponse.json({ ok: true });
 }

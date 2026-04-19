@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { prisma } from "@/lib/prisma";
+import { db, FieldValue } from "@/lib/firebase-admin";
 import { getAuthedStaff } from "@/lib/auth";
 
 const ItemSchema = z.object({
@@ -14,41 +14,36 @@ const InvoiceCreate = z.object({
   date: z.string().optional(),
 });
 
-function decToNumber(d: any) {
-  if (d == null) return 0;
-  if (typeof d === "number") return d;
-  if (typeof d === "string") return Number(d);
-  if (typeof d === "object" && typeof d.toNumber === "function") return d.toNumber();
-  return Number(d);
-}
-
-async function recalcBalance(patientId: string) {
-  const invoices = await prisma.invoice.findMany({
-    where: { patientId },
-    select: { total: true, paid: true },
-  });
-  const balance = invoices.reduce((s, i) => s + decToNumber(i.total) - decToNumber(i.paid), 0);
-  await prisma.patient.update({ where: { id: patientId }, data: { balance } });
+async function recalcPatientBalance(patientId: string) {
+  const invSnap = await db.collection("invoices").where("patientId", "==", patientId).get();
+  const outstanding = invSnap.docs.reduce((sum, d) => {
+    const i = d.data();
+    return sum + ((i.total || 0) - (i.paid || 0));
+  }, 0);
+  await db.collection("patients").doc(patientId).update({ balance: outstanding });
 }
 
 export async function GET() {
   const staff = await getAuthedStaff();
   if (!staff) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const invoices = await prisma.invoice.findMany({
-    orderBy: { date: "desc" },
-    select: {
-      id: true, patientId: true, date: true, total: true, paid: true, status: true,
-      patient: { select: { name: true } },
-    },
-  });
+  const [invSnap, patientSnap] = await Promise.all([
+    db.collection("invoices").orderBy("date", "desc").get(),
+    db.collection("patients").get(),
+  ]);
+
+  const patientMap = new Map<string, string>();
+  patientSnap.docs.forEach((d) => patientMap.set(d.id, d.data().name));
 
   return NextResponse.json({
-    invoices: invoices.map((i) => ({
-      id: i.id, pid: i.patientId, pname: i.patient.name,
-      date: i.date.toISOString().slice(0, 10),
-      total: decToNumber(i.total), paid: decToNumber(i.paid), status: i.status,
-    })),
+    invoices: invSnap.docs.map((d) => {
+      const i = d.data();
+      return {
+        id: d.id, pid: i.patientId, pname: patientMap.get(i.patientId) || "",
+        date: i.date, total: typeof i.total === "number" ? i.total : 0,
+        paid: typeof i.paid === "number" ? i.paid : 0, status: i.status,
+      };
+    }),
   });
 }
 
@@ -63,23 +58,18 @@ export async function POST(req: Request) {
   if (!body.success) return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
 
   const total = body.data.items.reduce((sum, it) => sum + Number(it.a), 0);
-  const date = body.data.date
-    ? new Date(body.data.date + "T00:00:00.000Z")
-    : new Date();
+  const date = body.data.date || new Date().toISOString().slice(0, 10);
 
-  const created = await prisma.invoice.create({
-    data: {
-      patientId: body.data.patientId,
-      date,
-      total,
-      paid: 0,
-      status: "unpaid",
-      items: {
-        create: body.data.items.map((it) => ({ description: it.d, amount: Number(it.a) })),
-      },
-    },
+  const docRef = await db.collection("invoices").add({
+    patientId: body.data.patientId,
+    date,
+    total,
+    paid: 0,
+    status: "unpaid",
+    items: body.data.items.map((it) => ({ d: it.d, a: Number(it.a) })),
+    createdAt: FieldValue.serverTimestamp(),
   });
 
-  await recalcBalance(body.data.patientId);
-  return NextResponse.json({ invoice: { id: created.id } });
+  await recalcPatientBalance(body.data.patientId);
+  return NextResponse.json({ invoice: { id: docRef.id } });
 }

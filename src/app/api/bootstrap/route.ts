@@ -1,11 +1,6 @@
 import { NextResponse } from "next/server";
 import { getAuthedStaff } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
-
-function toYMD(d: Date | null | undefined) {
-  if (!d) return "";
-  return new Date(d).toISOString().slice(0, 10);
-}
+import { db, tsToYMD } from "@/lib/firebase-admin";
 
 function decToNumber(d: any) {
   if (d == null) return 0;
@@ -19,115 +14,97 @@ export async function GET() {
   const staff = await getAuthedStaff();
   if (!staff) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const staffList = await prisma.staff.findMany({
-    select: { id: true, name: true, role: true, email: true, avatar: true },
-    orderBy: { createdAt: "asc" },
-  });
+  const [staffSnap, patientSnap, crSnap, apptSnap, invSnap, taskSnap, msgSnap] = await Promise.all([
+    db.collection("staff").orderBy("createdAt", "asc").get(),
+    db.collection("patients").orderBy("createdAt", "desc").get(),
+    db.collection("clinicalRecords").get(),
+    db.collection("appointments").orderBy("date", "asc").get(),
+    db.collection("invoices").orderBy("date", "desc").get(),
+    db.collection("tasks").orderBy("due", "asc").get(),
+    db.collection("messages").orderBy("createdAt", "desc").get(),
+  ]);
 
-  const patients = await prisma.patient.findMany({
-    orderBy: { createdAt: "desc" },
-    select: {
-      id: true, name: true, dob: true, phone: true, email: true, address: true,
-      job: true, blood: true, allergies: true, medical: true, smoker: true,
-      alcohol: true, gender: true, status: true, balance: true,
-      clinicalRecord: { select: { updatedAt: true } },
-    },
-  });
+  const staffMap = new Map<string, string>();
+  staffSnap.docs.forEach((d) => staffMap.set(d.id, d.data().name));
 
-  const clinicalRecords = await prisma.clinicalRecord.findMany({
-    include: {
-      patient: { select: { id: true } },
-      treatmentNotes: {
-        orderBy: { date: "desc" },
-        select: {
-          id: true, date: true, createdById: true,
-          createdBy: { select: { name: true } },
-          procedure: true, teeth: true, description: true, medications: true, followUp: true,
-        },
-      },
-    },
-  });
+  const patientMap = new Map<string, string>();
+  patientSnap.docs.forEach((d) => patientMap.set(d.id, d.data().name));
 
-  const appts = await prisma.appointment.findMany({
-    orderBy: { date: "asc" },
-    select: {
-      id: true, patientId: true, dentistId: true, date: true, time: true,
-      type: true, status: true, notes: true,
-      patient: { select: { name: true } },
-      dentist: { select: { name: true } },
-    },
-  });
+  // Build clinical records with treatment notes
+  const noteSnaps = await Promise.all(
+    crSnap.docs.map((cr) =>
+      db.collection("treatmentNotes").where("patientId", "==", cr.data().patientId).orderBy("date", "desc").get()
+    )
+  );
 
-  const invoices = await prisma.invoice.findMany({
-    orderBy: { date: "desc" },
-    select: {
-      id: true, patientId: true, date: true, status: true, total: true, paid: true,
-      patient: { select: { name: true } },
-    },
-  });
-
-  const tasks = await prisma.task.findMany({
-    orderBy: { due: "asc" },
-    select: {
-      id: true, title: true, priority: true, due: true, done: true,
-      assignedTo: { select: { name: true } },
-    },
-  });
-
-  const messages = await prisma.message.findMany({
-    orderBy: { createdAt: "desc" },
-    select: {
-      id: true, patientId: true, type: true, content: true, createdAt: true,
-      patient: { select: { name: true } },
-      sender: { select: { name: true } },
-    },
+  const clinical: Record<string, any> = {};
+  crSnap.docs.forEach((cr, i) => {
+    const c = cr.data();
+    const notes = noteSnaps[i].docs.map((n) => {
+      const nd = n.data();
+      return {
+        id: n.id, date: nd.date || "",
+        dentist: staffMap.get(nd.createdById) || "",
+        procedure: nd.procedure, teeth: nd.teeth || "",
+        description: nd.description || "", medications: nd.medications || "",
+        followUp: nd.followUp || "",
+      };
+    });
+    clinical[c.patientId] = {
+      odontogram: c.odontogram || {}, complaint: c.complaint || "",
+      bp: c.bp || "", pulse: c.pulse || "", temp: c.temp || "",
+      resp: c.resp || "", extraOral: c.extraOral || "",
+      intraOral: c.intraOral || "", occlusion: c.occlusion || "", notes,
+    };
   });
 
   return NextResponse.json({
     user: staff,
-    staff: staffList,
-    patients: patients.map((p) => ({
-      id: p.id, name: p.name, dob: p.dob ? toYMD(p.dob) : "",
-      phone: p.phone, email: p.email, address: p.address, job: p.job,
-      blood: p.blood, allergies: p.allergies, medical: p.medical,
-      smoker: p.smoker, alcohol: p.alcohol, gender: p.gender,
-      status: p.status, balance: decToNumber(p.balance),
-      lastVisit: toYMD(p.clinicalRecord?.updatedAt),
-    })),
-    clinical: Object.fromEntries(
-      clinicalRecords.map((cr) => {
-        const notes = cr.treatmentNotes.map((n) => ({
-          id: n.id, date: toYMD(n.date), dentist: n.createdBy.name,
-          procedure: n.procedure, teeth: n.teeth || "",
-          description: n.description || "", medications: n.medications || "",
-          followUp: n.followUp || "",
-        }));
-        return [cr.patientId, {
-          odontogram: cr.odontogram || {}, complaint: cr.complaint || "",
-          bp: cr.bp || "", pulse: cr.pulse || "", temp: cr.temp || "",
-          resp: cr.resp || "", extraOral: cr.extraOral || "",
-          intraOral: cr.intraOral || "", occlusion: cr.occlusion || "", notes,
-        }];
-      })
-    ),
-    appts: appts.map((a) => ({
-      id: a.id, pid: a.patientId, pname: a.patient.name,
-      date: toYMD(a.date), time: a.time, type: a.type,
-      dentist: a.dentist.name, status: a.status, notes: a.notes || "",
-    })),
-    invoices: invoices.map((i) => ({
-      id: i.id, pid: i.patientId, pname: i.patient.name,
-      date: toYMD(i.date), total: decToNumber(i.total),
-      paid: decToNumber(i.paid), status: i.status,
-    })),
-    tasks: tasks.map((t) => ({
-      id: t.id, title: t.title, priority: t.priority,
-      due: toYMD(t.due), done: t.done, who: t.assignedTo?.name || "",
-    })),
-    messages: messages.map((m) => ({
-      id: m.id, patientId: m.patientId, patient: m.patient.name,
-      type: m.type === "FollowUp" ? "Follow-up" : m.type,
-      content: m.content, date: toYMD(m.createdAt), sender: m.sender?.name || "",
-    })),
+    staff: staffSnap.docs.map((d) => {
+      const s = d.data();
+      return { id: d.id, name: s.name, role: s.role, email: s.email, avatar: s.avatar };
+    }),
+    patients: patientSnap.docs.map((d) => {
+      const p = d.data();
+      return {
+        id: d.id, name: p.name, dob: p.dob || "",
+        phone: p.phone, email: p.email, address: p.address, job: p.job,
+        blood: p.blood, allergies: p.allergies, medical: p.medical,
+        smoker: p.smoker, alcohol: p.alcohol, gender: p.gender,
+        status: p.status, balance: decToNumber(p.balance),
+        lastVisit: p.lastVisit || "",
+      };
+    }),
+    clinical,
+    appts: apptSnap.docs.map((d) => {
+      const a = d.data();
+      return {
+        id: d.id, pid: a.patientId, pname: patientMap.get(a.patientId) || "",
+        date: a.date, time: a.time, type: a.type,
+        dentist: staffMap.get(a.dentistId) || "", status: a.status, notes: a.notes || "",
+      };
+    }),
+    invoices: invSnap.docs.map((d) => {
+      const i = d.data();
+      return {
+        id: d.id, pid: i.patientId, pname: patientMap.get(i.patientId) || "",
+        date: i.date, total: decToNumber(i.total), paid: decToNumber(i.paid), status: i.status,
+      };
+    }),
+    tasks: taskSnap.docs.map((d) => {
+      const t = d.data();
+      return {
+        id: d.id, title: t.title, priority: t.priority,
+        due: t.due, done: t.done || false, who: staffMap.get(t.assignedToId) || "",
+      };
+    }),
+    messages: msgSnap.docs.map((d) => {
+      const m = d.data();
+      return {
+        id: d.id, patientId: m.patientId, patient: patientMap.get(m.patientId) || "",
+        type: m.type === "FollowUp" ? "Follow-up" : m.type,
+        content: m.content, date: tsToYMD(m.createdAt), sender: staffMap.get(m.senderId) || "",
+      };
+    }),
   });
 }

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { prisma } from "@/lib/prisma";
+import { db } from "@/lib/firebase-admin";
 import { getAuthedStaff } from "@/lib/auth";
 
 const UpdatePatient = z.object({
@@ -19,12 +19,6 @@ const UpdatePatient = z.object({
   status: z.enum(["active", "inactive"]).optional(),
 });
 
-function toDate(dob?: string | null) {
-  if (!dob) return undefined;
-  const dt = new Date(dob + "T00:00:00.000Z");
-  return Number.isNaN(dt.getTime()) ? undefined : dt;
-}
-
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const staff = await getAuthedStaff();
   if (!staff) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -38,7 +32,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
   const { id } = await params;
   const update: Record<string, any> = {};
   if (body.data.name !== undefined) update.name = body.data.name;
-  if (body.data.dob !== undefined) update.dob = toDate(body.data.dob) ?? null;
+  if (body.data.dob !== undefined) update.dob = body.data.dob || null;
   if (body.data.phone !== undefined) update.phone = body.data.phone;
   if (body.data.email !== undefined) update.email = body.data.email || null;
   if (body.data.address !== undefined) update.address = body.data.address || null;
@@ -51,7 +45,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
   if (body.data.gender !== undefined) update.gender = body.data.gender || null;
   if (body.data.status !== undefined) update.status = body.data.status;
 
-  await prisma.patient.update({ where: { id }, data: update });
+  await db.collection("patients").doc(id).update(update);
   return NextResponse.json({ ok: true });
 }
 
@@ -62,6 +56,23 @@ export async function DELETE(_req: Request, { params }: { params: Promise<{ id: 
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   const { id } = await params;
-  await prisma.patient.delete({ where: { id } });
+  const batch = db.batch();
+
+  batch.delete(db.collection("patients").doc(id));
+  batch.delete(db.collection("clinicalRecords").doc(id));
+
+  const [noteSnap, apptSnap, invSnap, msgSnap] = await Promise.all([
+    db.collection("treatmentNotes").where("patientId", "==", id).get(),
+    db.collection("appointments").where("patientId", "==", id).get(),
+    db.collection("invoices").where("patientId", "==", id).get(),
+    db.collection("messages").where("patientId", "==", id).get(),
+  ]);
+
+  noteSnap.docs.forEach((d) => batch.delete(d.ref));
+  apptSnap.docs.forEach((d) => batch.delete(d.ref));
+  invSnap.docs.forEach((d) => batch.delete(d.ref));
+  msgSnap.docs.forEach((d) => batch.delete(d.ref));
+
+  await batch.commit();
   return NextResponse.json({ ok: true });
 }

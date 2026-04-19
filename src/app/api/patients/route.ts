@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { prisma } from "@/lib/prisma";
+import { db, FieldValue } from "@/lib/firebase-admin";
 import { getAuthedStaff } from "@/lib/auth";
 
 const CreatePatient = z.object({
@@ -19,37 +19,24 @@ const CreatePatient = z.object({
   status: z.enum(["active", "inactive"]).optional(),
 });
 
-function toDate(dob?: string) {
-  if (!dob) return null;
-  const dt = new Date(dob + "T00:00:00.000Z");
-  return Number.isNaN(dt.getTime()) ? null : dt;
-}
-
 export async function GET() {
   const staff = await getAuthedStaff();
   if (!staff) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const patients = await prisma.patient.findMany({
-    orderBy: { createdAt: "desc" },
-    select: {
-      id: true, name: true, dob: true, phone: true, email: true, address: true,
-      job: true, blood: true, allergies: true, medical: true, smoker: true,
-      alcohol: true, gender: true, status: true, balance: true,
-      clinicalRecord: { select: { updatedAt: true } },
-    },
+  const snap = await db.collection("patients").orderBy("createdAt", "desc").get();
+  const patients = snap.docs.map((d) => {
+    const p = d.data();
+    return {
+      id: d.id, name: p.name, dob: p.dob || "", phone: p.phone,
+      email: p.email, address: p.address, job: p.job, blood: p.blood,
+      allergies: p.allergies, medical: p.medical, smoker: p.smoker,
+      alcohol: p.alcohol, gender: p.gender, status: p.status,
+      balance: typeof p.balance === "number" ? p.balance : 0,
+      lastVisit: p.lastVisit || "",
+    };
   });
 
-  return NextResponse.json({
-    patients: patients.map((p) => ({
-      id: p.id, name: p.name,
-      dob: p.dob ? p.dob.toISOString().slice(0, 10) : "",
-      phone: p.phone, email: p.email, address: p.address, job: p.job,
-      blood: p.blood, allergies: p.allergies, medical: p.medical,
-      smoker: p.smoker, alcohol: p.alcohol, gender: p.gender, status: p.status,
-      balance: typeof p.balance === "number" ? p.balance : (p.balance as any).toNumber(),
-      lastVisit: p.clinicalRecord?.updatedAt ? p.clinicalRecord.updatedAt.toISOString().slice(0, 10) : "",
-    })),
-  });
+  return NextResponse.json({ patients });
 }
 
 export async function POST(req: Request) {
@@ -62,17 +49,24 @@ export async function POST(req: Request) {
   const body = CreatePatient.safeParse(json);
   if (!body.success) return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
 
-  const created = await prisma.patient.create({
-    data: {
-      name: body.data.name, dob: toDate(body.data.dob),
-      phone: body.data.phone, email: body.data.email || null,
-      address: body.data.address || null, job: body.data.job || null,
-      blood: body.data.blood || null, allergies: body.data.allergies || "None",
-      medical: body.data.medical || null, smoker: body.data.smoker || null,
-      alcohol: body.data.alcohol || null, gender: body.data.gender || null,
-      status: body.data.status || "active", balance: 0,
-    },
+  const docRef = await db.collection("patients").add({
+    name: body.data.name,
+    dob: body.data.dob || null,
+    phone: body.data.phone,
+    email: body.data.email || null,
+    address: body.data.address || null,
+    job: body.data.job || null,
+    blood: body.data.blood || null,
+    allergies: body.data.allergies || "None",
+    medical: body.data.medical || null,
+    smoker: body.data.smoker || null,
+    alcohol: body.data.alcohol || null,
+    gender: body.data.gender || null,
+    status: body.data.status || "active",
+    balance: 0,
+    lastVisit: null,
+    createdAt: FieldValue.serverTimestamp(),
   });
 
-  return NextResponse.json({ patient: created });
+  return NextResponse.json({ patient: { id: docRef.id } });
 }
