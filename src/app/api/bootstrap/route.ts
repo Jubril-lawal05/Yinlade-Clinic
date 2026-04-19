@@ -33,14 +33,14 @@ export async function GET() {
   // Build clinical records with treatment notes
   const noteSnaps = await Promise.all(
     crSnap.docs.map((cr) =>
-      db.collection("treatmentNotes").where("patientId", "==", cr.data().patientId).orderBy("date", "desc").get()
+      db.collection("treatmentNotes").where("patientId", "==", cr.data().patientId).get()
     )
   );
 
   const clinical: Record<string, any> = {};
   crSnap.docs.forEach((cr, i) => {
     const c = cr.data();
-    const notes = noteSnaps[i].docs.map((n) => {
+    const notes = noteSnaps[i].docs.sort((a, b) => (b.data().date > a.data().date ? 1 : -1)).map((n) => {
       const nd = n.data();
       return {
         id: n.id, date: nd.date || "",

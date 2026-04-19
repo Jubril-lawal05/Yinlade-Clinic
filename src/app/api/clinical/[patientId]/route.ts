@@ -36,7 +36,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ patient
   const { patientId } = await params;
   const [crDoc, noteSnap, staffSnap] = await Promise.all([
     db.collection("clinicalRecords").doc(patientId).get(),
-    db.collection("treatmentNotes").where("patientId", "==", patientId).orderBy("date", "desc").get(),
+    db.collection("treatmentNotes").where("patientId", "==", patientId).get(),
     db.collection("staff").get(),
   ]);
 
@@ -61,7 +61,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ patient
     extraOral: cr.extraOral || "",
     intraOral: cr.intraOral || "",
     occlusion: cr.occlusion || "",
-    notes: noteSnap.docs.map((d) => {
+    notes: noteSnap.docs.sort((a, b) => (b.data().date > a.data().date ? 1 : -1)).map((d) => {
       const n = d.data();
       return {
         id: d.id, date: n.date || "",
