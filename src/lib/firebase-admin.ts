@@ -5,15 +5,20 @@ function getAdminApp() {
   if (getApps().length > 0) return getApp();
   const projectId = process.env.FIREBASE_PROJECT_ID;
   const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
-  const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n");
+  const rawKey = process.env.FIREBASE_PRIVATE_KEY;
 
-  if (!projectId || !clientEmail || !privateKey) {
-    throw new Error(
-      "Missing Firebase credentials. Set FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, and FIREBASE_PRIVATE_KEY in your environment."
-    );
+  if (!projectId || !clientEmail || !rawKey) {
+    throw new Error(`Missing Firebase credentials: projectId=${!!projectId} clientEmail=${!!clientEmail} privateKey=${!!rawKey}`);
   }
 
-  return initializeApp({ credential: cert({ projectId, clientEmail, privateKey }) });
+  // Handle both literal \n (from Vercel env vars) and actual newlines
+  const privateKey = rawKey.includes("\\n") ? rawKey.replace(/\\n/g, "\n") : rawKey;
+
+  try {
+    return initializeApp({ credential: cert({ projectId, clientEmail, privateKey }) });
+  } catch (e) {
+    throw new Error(`Firebase init failed: ${e instanceof Error ? e.message : String(e)}`);
+  }
 }
 
 export function getDb() {

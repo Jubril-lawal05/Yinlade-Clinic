@@ -25,8 +25,15 @@ export async function POST(req: Request) {
   const body = Body.safeParse(json);
   if (!body.success) return NextResponse.json({ error: "Invalid request" }, { status: 400 });
 
-  const snap = await db.collection("staff").where("email", "==", body.data.email).limit(1).get();
+  let snap;
+  try {
+    snap = await db.collection("staff").where("email", "==", body.data.email).limit(1).get();
+  } catch (e) {
+    console.error("[login] Firestore error:", e);
+    return NextResponse.json({ error: "Database error", detail: e instanceof Error ? e.message : String(e) }, { status: 500 });
+  }
   if (snap.empty) return NextResponse.json({ error: "Incorrect email or password" }, { status: 401 });
+
 
   const doc = snap.docs[0];
   const staff = doc.data();
