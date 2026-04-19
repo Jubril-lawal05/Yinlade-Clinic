@@ -1,41 +1,33 @@
 import { initializeApp, getApps, getApp, cert } from "firebase-admin/app";
 import { getFirestore, FieldValue, Timestamp } from "firebase-admin/firestore";
 
-function getAdminApp() {
-  if (getApps().length > 0) return getApp();
+let _db: ReturnType<typeof getFirestore> | null = null;
 
-  // Prefer full JSON service account (most reliable on Vercel)
-  if (process.env.FIREBASE_SERVICE_ACCOUNT) {
-    try {
-      const sa = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
-      return initializeApp({ credential: cert(sa) });
-    } catch (e) {
-      throw new Error(`Failed to parse FIREBASE_SERVICE_ACCOUNT: ${e instanceof Error ? e.message : String(e)}`);
+function getAdminDb() {
+  if (_db) return _db;
+
+  if (getApps().length === 0) {
+    if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+      try {
+        const sa = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+        initializeApp({ credential: cert(sa) });
+      } catch (e) {
+        throw new Error(`Failed to parse FIREBASE_SERVICE_ACCOUNT: ${e instanceof Error ? e.message : String(e)}`);
+      }
+    } else {
+      const projectId = process.env.FIREBASE_PROJECT_ID;
+      const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
+      const rawKey = process.env.FIREBASE_PRIVATE_KEY;
+      if (!projectId || !clientEmail || !rawKey)
+        throw new Error(`Missing Firebase credentials`);
+      const privateKey = rawKey.includes("\\n") ? rawKey.replace(/\\n/g, "\n") : rawKey;
+      initializeApp({ credential: cert({ projectId, clientEmail, privateKey }) });
     }
   }
 
-  // Fallback: individual env vars
-  const projectId = process.env.FIREBASE_PROJECT_ID;
-  const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
-  const rawKey = process.env.FIREBASE_PRIVATE_KEY;
-
-  if (!projectId || !clientEmail || !rawKey) {
-    throw new Error(`Missing Firebase credentials: projectId=${!!projectId} clientEmail=${!!clientEmail} privateKey=${!!rawKey}`);
-  }
-
-  const privateKey = rawKey.includes("\\n") ? rawKey.replace(/\\n/g, "\n") : rawKey;
-
-  try {
-    return initializeApp({ credential: cert({ projectId, clientEmail, privateKey }) });
-  } catch (e) {
-    throw new Error(`Firebase init failed: ${e instanceof Error ? e.message : String(e)}`);
-  }
-}
-
-export function getDb() {
-  const db = getFirestore(getAdminApp());
-  db.settings({ ignoreUndefinedProperties: true });
-  return db;
+  _db = getFirestore(getApp());
+  _db.settings({ ignoreUndefinedProperties: true });
+  return _db;
 }
 
 export { FieldValue, Timestamp };
@@ -52,6 +44,6 @@ export function tsToYMD(ts: any): string {
 
 export const db = new Proxy({} as ReturnType<typeof getFirestore>, {
   get(_target, prop) {
-    return (getDb() as any)[prop];
+    return (getAdminDb() as any)[prop];
   },
 });

@@ -16,7 +16,7 @@ export async function GET() {
   if (!staff) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const [staffSnap, patientSnap, crSnap, apptSnap, invSnap, taskSnap, msgSnap] = await Promise.all([
-    db.collection("staff").orderBy("createdAt", "asc").get(),
+    db.collection("staff").get(),
     db.collection("patients").orderBy("createdAt", "desc").get(),
     db.collection("clinicalRecords").get(),
     db.collection("appointments").orderBy("date", "asc").get(),
