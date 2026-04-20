@@ -14,6 +14,8 @@ body {
 body {
   font-family: Outfit, Segoe UI, sans-serif;
   background: #f4f7f9;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* ─── Animations ─────────────────────────────────── */
@@ -37,8 +39,51 @@ body {
   to   { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes floatIdle {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+
 .animate-fade-in  { animation: fadeIn 0.2s ease forwards; }
 .animate-slide-up { animation: slideInUp 0.25s ease forwards; }
+
+/* ─── Stat card entrance stagger ─────────────────── */
+.stat-card {
+  animation: scaleIn 0.35s cubic-bezier(.4,0,.2,1) both;
+}
+.stat-card:nth-child(1) { animation-delay: 0ms; }
+.stat-card:nth-child(2) { animation-delay: 60ms; }
+.stat-card:nth-child(3) { animation-delay: 120ms; }
+.stat-card:nth-child(4) { animation-delay: 180ms; }
+.stat-card:nth-child(5) { animation-delay: 240ms; }
+
+/* ─── Empty state illustration float ─────────────── */
+.empty-icon {
+  animation: floatIdle 3s ease-in-out infinite;
+}
+
+/* ─── Focus styles ───────────────────────────────── */
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #1a6b4a !important;
+  box-shadow: 0 0 0 3px rgba(26, 107, 74, 0.10) !important;
+  outline: none;
+}
+
+/* ─── Smooth row & card hover ────────────────────── */
+tbody tr {
+  transition: background 0.12s ease;
+}
+
+button {
+  transition: all 0.14s ease;
+}
 
 /* ─── Mobile drawer ──────────────────────────────── */
 .mobile-drawer {
@@ -123,6 +168,12 @@ body {
   /* Bottom safe area padding */
   .main-content {
     padding-bottom: env(safe-area-inset-bottom, 16px);
+  }
+
+  /* Empty states: smaller on mobile */
+  .empty-state-icon {
+    width: 56px !important;
+    height: 56px !important;
   }
 }
 

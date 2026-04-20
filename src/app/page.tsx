@@ -232,7 +232,8 @@ function Bdg({ label, color }: { label: string; color: string }) {
 
 function StatCard({ label, value, sub, icon, ac, acBg }: { label: string; value: string | number; sub?: string; icon: string; ac: string; acBg: string }) {
   return (
-    <div style={{ background: SU, border: `1px solid ${BR}`, borderRadius: 15, padding: "18px 20px", boxShadow: SH, display: "flex", gap: 14 }}>
+    <div className="stat-card" style={{ background: SU, border: `1px solid ${BR}`, borderRadius: 15, padding: "18px 20px", boxShadow: SH, display: "flex", gap: 14, position: "relative", overflow: "hidden" }}>
+      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: `linear-gradient(90deg, ${ac}, ${ac}66)`, borderRadius: "15px 15px 0 0" }} />
       <div style={{ width: 44, height: 44, borderRadius: 12, background: acBg, display: "flex", alignItems: "center", justifyContent: "center", color: ac, flexShrink: 0 }}>
         <Ico n={icon} s={19} />
       </div>
@@ -241,6 +242,23 @@ function StatCard({ label, value, sub, icon, ac, acBg }: { label: string; value:
         <div style={{ color: TX, fontSize: 22, fontWeight: 800, fontFamily: "Lora,Georgia,serif", lineHeight: 1 }}>{value}</div>
         {sub && <div style={{ color: TL, fontSize: 12, marginTop: 3 }}>{sub}</div>}
       </div>
+    </div>
+  );
+}
+
+function EmptyState({ icon, title, subtitle, action, onAction }: { icon: string; title: string; subtitle: string; action?: string; onAction?: () => void }) {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "48px 24px", textAlign: "center" }}>
+      <div className="empty-icon" style={{ width: 72, height: 72, borderRadius: 20, background: `linear-gradient(135deg, ${GL}, ${SA})`, border: `1.5px solid ${BR}`, display: "flex", alignItems: "center", justifyContent: "center", color: TL, marginBottom: 18 }}>
+        <Ico n={icon} s={32} />
+      </div>
+      <div style={{ color: TX, fontSize: 17, fontWeight: 800, fontFamily: "Lora,Georgia,serif", marginBottom: 6 }}>{title}</div>
+      <div style={{ color: TL, fontSize: 13, maxWidth: 320, lineHeight: 1.6, marginBottom: action ? 18 : 0 }}>{subtitle}</div>
+      {action && onAction && (
+        <button onClick={onAction} style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "10px 20px", borderRadius: 11, background: G, color: "#fff", border: "none", fontWeight: 700, fontSize: 13, cursor: "pointer", fontFamily: "inherit", boxShadow: `0 4px 14px ${G}33` }}>
+          <Ico n="plus" s={14} />{action}
+        </button>
+      )}
     </div>
   );
 }
@@ -1595,7 +1613,7 @@ export default function Page() {
           return (
             <div>
               <div style={{ marginBottom: 24 }}>
-                <h2 style={{ margin: "0 0 3px", color: TX, fontSize: 24, fontFamily: "Lora,Georgia,serif", fontWeight: 700 }}>{greetMsg}, {user.name.split(" ")[0]} 👋</h2>
+                <h2 style={{ margin: "0 0 3px", color: TX, fontSize: 24, fontFamily: "Lora,Georgia,serif", fontWeight: 700 }}>{greetMsg}, {user.name.split(" ").length > 1 && user.name.split(" ")[0].length <= 3 ? user.name.split(" ").slice(0, 2).join(" ") : user.name.split(" ")[0]} 👋</h2>
                 <p style={{ margin: 0, color: TL, fontSize: 13 }}>{new Date().toLocaleDateString("en-NG", { weekday: "long", day: "numeric", month: "long", year: "numeric" })} · Yinlade Clinic, Abuja</p>
               </div>
               <div className="stats-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(190px,1fr))", gap: isMobile ? 10 : 13, marginBottom: 24 }}>
@@ -1621,7 +1639,7 @@ export default function Page() {
                       <Bdg label={a.status} color={a.status === "confirmed" ? "green" : a.status === "completed" ? "blue" : "yellow"} />
                     </div>
                   ))}
-                  {appts.filter(a => a.date > today && a.status !== "completed").length === 0 && <p style={{ color: TL, fontSize: 13, margin: 0 }}>No upcoming appointments</p>}
+                  {appts.filter(a => a.date > today && a.status !== "completed").length === 0 && <EmptyState icon="cal" title="No upcoming appointments" subtitle="Book an appointment to see it here." />}
                 </div>
                 <div style={{ background: SU, border: `1px solid ${BR}`, borderRadius: 14, padding: 20, boxShadow: SH }}>
                   <div style={{ fontSize: 11, color: TM, fontWeight: 700, letterSpacing: "0.09em", textTransform: "uppercase", marginBottom: 14 }}>Clinic Tasks</div>
@@ -1635,7 +1653,7 @@ export default function Page() {
                       <Bdg label={t.priority} color={t.priority === "high" ? "red" : t.priority === "medium" ? "yellow" : "green"} />
                     </div>
                   ))}
-                  {tasks.filter(t => !t.done).length === 0 && <p style={{ color: TL, fontSize: 13, margin: 0 }}>All tasks complete 🎉</p>}
+                  {tasks.filter(t => !t.done).length === 0 && <EmptyState icon="task" title="All caught up!" subtitle="No pending tasks. Add new tasks to stay organised." />}
                 </div>
               </div>
             </div>
@@ -1683,7 +1701,7 @@ export default function Page() {
                   <table style={{ width: "100%", borderCollapse: "collapse", minWidth: isMobile ? 640 : undefined }}>
                     <thead>
                       <tr style={{ background: SA, borderBottom: `1.5px solid ${BR}` }}>
-                        {["ID", "Patient", "Phone", "Age", "Last Visit", "Balance", "Status", ""].map(h => (
+                        {["ID", "Patient", "Phone", "Age", "Last Visit", "Balance", "Status", "Actions"].map(h => (
                           <th key={h} style={{ textAlign: "left", padding: "10px 14px", color: TM, fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" }}>{h}</th>
                         ))}
                       </tr>
@@ -1724,7 +1742,7 @@ export default function Page() {
                           </td>
                         </tr>
                       ))}
-                      {paginatedPatients.length === 0 && <tr><td colSpan={8} style={{ padding: 36, textAlign: "center", color: TL }}>No patients found</td></tr>}
+                      {paginatedPatients.length === 0 && <tr><td colSpan={8}><EmptyState icon="pts" title="No patients yet" subtitle="Register your first patient to get started with clinical records." action="Add Patient" onAction={() => { setPatientForm({ status: "active", allergies: "None", blood: "O+", gender: "Female", smoker: "No", alcohol: "None" }); setPatientModal("add"); }} /></td></tr>}
                     </tbody>
                   </table>
                 </div>
@@ -1732,7 +1750,7 @@ export default function Page() {
                 {/* Pagination + count */}
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 12, flexWrap: "wrap", gap: 8 }}>
                   <p style={{ color: TL, fontSize: 12, margin: 0 }}>
-                    💡 Click any row to open the full clinical record. &nbsp;·&nbsp; Showing {Math.min((patientPage - 1) * PATIENT_PAGE_SIZE + 1, filteredPatients.length)}–{Math.min(patientPage * PATIENT_PAGE_SIZE, filteredPatients.length)} of {filteredPatients.length} patients
+                    Showing {Math.min((patientPage - 1) * PATIENT_PAGE_SIZE + 1, filteredPatients.length)}–{Math.min(patientPage * PATIENT_PAGE_SIZE, filteredPatients.length)} of {filteredPatients.length} patients
                   </p>
                   {patientPageCount > 1 && (
                     <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
@@ -1869,7 +1887,7 @@ export default function Page() {
         {tab === "appointments" && (
           <div>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, marginBottom: 16, flexWrap: "wrap" }}>
-              <div style={{ color: TX, fontWeight: 900, fontSize: 20 }}>Appointments</div>
+              <h2 style={{ margin: 0, color: TX, fontFamily: "Lora,Georgia,serif", fontSize: 24, fontWeight: 700 }}>Appointments</h2>
               <Btn
                 variant="accent"
                 onClick={() => {
@@ -1986,7 +2004,7 @@ export default function Page() {
                   </div>
                 ))}
                 {filtered.length === 0 && (
-                  <div style={{ padding: 48, textAlign: "center", color: TM, fontWeight: 900, background: SU, borderRadius: 16, border: `1px solid ${BR}` }}>No appointments found</div>
+                  <div style={{ background: SU, borderRadius: 16, border: `1px solid ${BR}` }}><EmptyState icon="cal" title="No appointments found" subtitle="Book a new appointment or adjust your filters." /></div>
                 )}
               </div>
             </>
@@ -2071,7 +2089,7 @@ export default function Page() {
         {tab === "billing" && (
           <div>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, marginBottom: 16, flexWrap: "wrap" }}>
-              <div style={{ color: TX, fontWeight: 900, fontSize: 20 }}>Billing & Invoices</div>
+              <h2 style={{ margin: 0, color: TX, fontFamily: "Lora,Georgia,serif", fontSize: 24, fontWeight: 700 }}>Billing & Invoices</h2>
               <Btn
                 variant="warn"
                 onClick={() => {
@@ -2174,7 +2192,7 @@ export default function Page() {
                             </td>
                           </tr>
                         ))}
-                        {filteredInvoices.length === 0 && <tr><td colSpan={8} style={{ padding: 32, textAlign: "center", color: TM, fontWeight: 900 }}>No invoices found</td></tr>}
+                        {filteredInvoices.length === 0 && <tr><td colSpan={8}><EmptyState icon="bill" title="No invoices yet" subtitle="Create your first invoice to start tracking revenue." /></td></tr>}
                       </tbody>
                     </table>
                   </div>
@@ -2379,7 +2397,7 @@ export default function Page() {
                     ><Ico n="del" s={13} /></button>
                   </div>
                 ))}
-              {tasks.length === 0 && <div style={{ padding: 32, textAlign: "center", color: TM, fontWeight: 900 }}>Nothing here</div>}
+              {tasks.length === 0 && <div style={{ background: SU, borderRadius: 14, border: `1px solid ${BR}` }}><EmptyState icon="task" title="No tasks yet" subtitle="Add tasks to keep your clinic organised and on track." action="Add Task" onAction={() => { setTaskForm({ title: "", priority: "medium", due: todayYMD(), assignedToId: staff.find((s) => s.role === "Nurse")?.id || staff[0]?.id || null }); setTaskModal(true); }} /></div>}
             </div>
 
             {taskModal && (
@@ -2457,7 +2475,7 @@ export default function Page() {
                   </div>
                 );
               })}
-              {messages.length === 0 && <p style={{ textAlign: "center", color: TL, padding: 36 }}>No messages</p>}
+              {messages.length === 0 && <div style={{ background: SU, borderRadius: 14, border: `1px solid ${BR}` }}><EmptyState icon="msg" title="No messages yet" subtitle="Send a reminder, follow-up, or payment notice to a patient." /></div>}
             </div>
 
             {msgModal && (
