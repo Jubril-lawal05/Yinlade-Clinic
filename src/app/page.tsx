@@ -108,10 +108,10 @@ type Bootstrap = {
   messages: Message[];
 };
 
-const DEMO = [
-  { email: "doctor@yinlade.ng", password: "doctor123", name: "Dr Adeyinka Lawal", role: "Dentist", avatar: "AL" },
-  { email: "admin@yinlade.ng", password: "admin123", name: "Kemi Adebayo", role: "Admin", avatar: "KA" },
-  { email: "nurse@yinlade.ng", password: "nurse123", name: "Nurse Bola", role: "Nurse", avatar: "NB" },
+const STAFF_PROFILES = [
+  { name: "Dr Adeyinka Lawal", role: "Dentist", avatar: "AL" },
+  { name: "Kemi Adebayo",      role: "Admin",   avatar: "KA" },
+  { name: "Nurse Bola",        role: "Nurse",   avatar: "NB" },
 ];
 
 const G = "#1a6b4a", GL = "#e6f4ee", GM = "#3d9e72";
@@ -1096,8 +1096,8 @@ export default function Page() {
 
   const [tab, setTab] = useState<"dashboard" | "patients" | "appointments" | "billing" | "communications" | "tasks">("dashboard");
 
-  const [loginEmail, setLoginEmail] = useState(DEMO[0].email);
-  const [loginPw, setLoginPw] = useState(DEMO[0].password);
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPw, setLoginPw] = useState("");
   const [loginErr, setLoginErr] = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
   const [showPw, setShowPw] = useState(false);
@@ -1386,20 +1386,20 @@ export default function Page() {
               <p style={{ color: "rgba(255,255,255,0.6)", fontSize: 13, lineHeight: 1.7, margin: 0 }}>Odontograms, treatment notes, billing and appointments — all in one place.</p>
             </div>
             <div>
-              <div style={{ color: "rgba(255,255,255,0.45)", fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 11 }}>Quick demo access</div>
-              {DEMO.map((d) => (
-                <button key={d.email} onClick={() => { setLoginEmail(d.email); setLoginPw(d.password); }}
+              <div style={{ color: "rgba(255,255,255,0.45)", fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 11 }}>Clinic Staff Profiles</div>
+              {STAFF_PROFILES.map((s) => (
+                <button key={s.name} onClick={() => { setLoginEmail(s.name); setLoginPw(""); }}
                   style={{ display: "flex", alignItems: "center", gap: 10, width: "100%", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 11, padding: "9px 12px", cursor: "pointer", marginBottom: 6, textAlign: "left", transition: "background 0.15s" }}
                   onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.14)"}
                   onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.08)"}>
-                  <div style={{ width: 30, height: 30, borderRadius: "50%", background: "rgba(255,255,255,0.17)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 11, fontWeight: 700, flexShrink: 0 }}>{d.avatar}</div>
+                  <div style={{ width: 30, height: 30, borderRadius: "50%", background: "rgba(255,255,255,0.17)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 11, fontWeight: 700, flexShrink: 0 }}>{s.avatar}</div>
                   <div>
-                    <div style={{ color: "#fff", fontSize: 12, fontWeight: 600 }}>{d.name}</div>
-                    <div style={{ color: "rgba(255,255,255,0.45)", fontSize: 11 }}>{d.role}</div>
+                    <div style={{ color: "#fff", fontSize: 12, fontWeight: 600 }}>{s.name}</div>
+                    <div style={{ color: "rgba(255,255,255,0.45)", fontSize: 11 }}>{s.role}</div>
                   </div>
                 </button>
               ))}
-              <div style={{ color: "rgba(255,255,255,0.3)", fontSize: 11, marginTop: 5 }}>Click any profile to autofill</div>
+              <div style={{ color: "rgba(255,255,255,0.3)", fontSize: 11, marginTop: 5 }}>Click a profile to pre-fill name</div>
             </div>
           </div>
           {/* RIGHT */}
@@ -1421,17 +1421,17 @@ export default function Page() {
               </div>
             )}
             <div style={{ marginBottom: 13 }}>
-              <label style={{ display: "block", color: TM, fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 6 }}>Email Address</label>
+              <label style={{ display: "block", color: TM, fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 6 }}>Name or Email</label>
               <div style={{ position: "relative" }}>
                 <span style={{ position: "absolute", left: 11, top: "50%", transform: "translateY(-50%)", color: TL }}><Ico n="mail" s={15} /></span>
-                <input type="email" value={loginEmail} onChange={e => setLoginEmail(e.target.value)} placeholder="you@yinlade.ng" style={{ width: "100%", border: `1.5px solid ${BR}`, borderRadius: 10, padding: "10px 11px 10px 36px", fontSize: 14, color: TX, outline: "none", boxSizing: "border-box", fontFamily: "inherit", background: SA }} />
+                <input type="text" autoComplete="off" value={loginEmail} onChange={e => setLoginEmail(e.target.value)} placeholder="e.g. Dr Adeyinka Lawal" style={{ width: "100%", border: `1.5px solid ${BR}`, borderRadius: 10, padding: "10px 11px 10px 36px", fontSize: 14, color: TX, outline: "none", boxSizing: "border-box", fontFamily: "inherit", background: SA }} />
               </div>
             </div>
             <div style={{ marginBottom: 22 }}>
               <label style={{ display: "block", color: TM, fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 6 }}>Password</label>
               <div style={{ position: "relative" }}>
                 <span style={{ position: "absolute", left: 11, top: "50%", transform: "translateY(-50%)", color: TL }}><Ico n="lock" s={15} /></span>
-                <input type={showPw ? "text" : "password"} value={loginPw} onChange={e => setLoginPw(e.target.value)} placeholder="••••••••" onKeyDown={e => e.key === "Enter" ? doLogin() : null} style={{ width: "100%", border: `1.5px solid ${BR}`, borderRadius: 10, padding: "10px 36px 10px 36px", fontSize: 14, color: TX, outline: "none", boxSizing: "border-box", fontFamily: "inherit", background: SA }} />
+                <input type={showPw ? "text" : "password"} autoComplete="new-password" value={loginPw} onChange={e => setLoginPw(e.target.value)} placeholder="••••••••" onKeyDown={e => e.key === "Enter" ? doLogin() : null} style={{ width: "100%", border: `1.5px solid ${BR}`, borderRadius: 10, padding: "10px 36px 10px 36px", fontSize: 14, color: TX, outline: "none", boxSizing: "border-box", fontFamily: "inherit", background: SA }} />
                 <button onClick={() => setShowPw(s => !s)} style={{ position: "absolute", right: 11, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", color: TL, cursor: "pointer", display: "flex", padding: 2 }}><Ico n={showPw ? "eyeoff" : "eye"} s={15} /></button>
               </div>
             </div>
@@ -1440,15 +1440,15 @@ export default function Page() {
             </button>
             {isMobile && (
               <div style={{ marginTop: 28 }}>
-                <div style={{ color: TL, fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 10, textAlign: "center" }}>Quick demo access</div>
+                <div style={{ color: TL, fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 10, textAlign: "center" }}>Clinic Staff Profiles</div>
                 <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                  {DEMO.map((d) => (
-                    <button key={d.email} onClick={() => { setLoginEmail(d.email); setLoginPw(d.password); }}
+                  {STAFF_PROFILES.map((s) => (
+                    <button key={s.name} onClick={() => { setLoginEmail(s.name); setLoginPw(""); }}
                       style={{ display: "flex", alignItems: "center", gap: 10, width: "100%", background: SA, border: `1px solid ${BR}`, borderRadius: 10, padding: "9px 12px", cursor: "pointer", textAlign: "left" }}>
-                      <div style={{ width: 28, height: 28, borderRadius: "50%", background: `linear-gradient(135deg,${G},${GM})`, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 10, fontWeight: 700, flexShrink: 0 }}>{d.avatar}</div>
+                      <div style={{ width: 28, height: 28, borderRadius: "50%", background: `linear-gradient(135deg,${G},${GM})`, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 10, fontWeight: 700, flexShrink: 0 }}>{s.avatar}</div>
                       <div>
-                        <div style={{ color: TX, fontSize: 12, fontWeight: 600 }}>{d.name}</div>
-                        <div style={{ color: TL, fontSize: 11 }}>{d.role}</div>
+                        <div style={{ color: TX, fontSize: 12, fontWeight: 600 }}>{s.name}</div>
+                        <div style={{ color: TL, fontSize: 11 }}>{s.role}</div>
                       </div>
                     </button>
                   ))}

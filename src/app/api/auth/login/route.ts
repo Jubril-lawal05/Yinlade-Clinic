@@ -2,10 +2,11 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { db } from "@/lib/firebase-admin";
+import { Filter } from "firebase-admin/firestore";
 import { getJwtCookieName, signAuthToken } from "@/lib/auth";
 
 const Body = z.object({
-  email: z.string().email(),
+  email: z.string().min(1),
   password: z.string().min(1),
 });
 
@@ -27,12 +28,18 @@ export async function POST(req: Request) {
 
   let snap;
   try {
-    snap = await db.collection("staff").where("email", "==", body.data.email).limit(1).get();
+    snap = await db.collection("staff")
+      .where(Filter.or(
+        Filter.where("email", "==", body.data.email),
+        Filter.where("name", "==", body.data.email)
+      ))
+      .limit(1)
+      .get();
   } catch (e) {
     console.error("[login] Firestore error:", e);
     return NextResponse.json({ error: "Database error", detail: e instanceof Error ? e.message : String(e) }, { status: 500 });
   }
-  if (snap.empty) return NextResponse.json({ error: "Incorrect email or password" }, { status: 401 });
+  if (snap.empty) return NextResponse.json({ error: "Incorrect name, email, or password" }, { status: 401 });
 
 
   const doc = snap.docs[0];
