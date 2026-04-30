@@ -14,7 +14,9 @@ type AuthedStaff = {
 
 type Patient = {
   id: string;
+  displayId?: string;
   name: string;
+  age?: string | number;
   dob: string; // YYYY-MM-DD
   phone: string;
   email?: string;
@@ -621,7 +623,7 @@ function ClinicalRecordView({
             <div>
               <div style={{ color: TX, fontSize: 18, fontWeight: 900 }}>{patient.name}</div>
               <div style={{ color: TM, fontSize: 12 }}>
-                {patient.id} · {patient.gender || "—"} · Age {ageFromDob(patient.dob) || "—"} · {patient.blood || ""} · Allergies: <span style={{ color: patient.allergies !== "None" ? RD : TM, fontWeight: 600 }}>{patient.allergies || "None"}</span>
+                {patient.displayId || patient.id} · {patient.gender || "—"} · Age {patient.age || ageFromDob(patient.dob) || "—"} · {patient.blood || ""} · Allergies: <span style={{ color: patient.allergies !== "None" ? RD : TM, fontWeight: 600 }}>{patient.allergies || "None"}</span>
               </div>
             </div>
           </div>
@@ -672,7 +674,7 @@ function ClinicalRecordView({
             {[
               ["Full Name", patient.name],
               ["Date of Birth", patient.dob],
-              ["Age", ageFromDob(patient.dob) ? `${ageFromDob(patient.dob)} yrs` : "—"],
+              ["Age", patient.age ? `${patient.age} yrs` : (ageFromDob(patient.dob) ? `${ageFromDob(patient.dob)} yrs` : "—")],
               ["Gender", patient.gender || "—"],
               ["Phone", patient.phone],
               ["Email", patient.email || "—"],
@@ -1235,6 +1237,8 @@ export default function Page() {
   async function savePatient() {
     const payload = {
       ...patientForm,
+      age: patientForm.age || "",
+      displayId: patientForm.displayId || "",
       dob: patientForm.dob || "",
       email: patientForm.email || "",
       address: patientForm.address || "",
@@ -1264,7 +1268,13 @@ export default function Page() {
   }
 
   async function deletePatient(id: string) {
-    if (!confirm("Delete this patient record? This cannot be undone.")) return;
+    const p = patients.find((x) => x.id === id);
+    if (!p) return;
+    const ans = prompt(`To delete patient ${p.name}, please type "DELETE" (without quotes):`);
+    if (ans !== "DELETE") {
+      alert("Deletion cancelled.");
+      return;
+    }
     const r = await fetch(`/api/patients/${id}`, { method: "DELETE", credentials: "include" });
     if (!r.ok) return;
     setOpenPatientId(null);
@@ -1616,11 +1626,16 @@ export default function Page() {
                 <h2 style={{ margin: "0 0 3px", color: TX, fontSize: 24, fontFamily: "Lora,Georgia,serif", fontWeight: 700 }}>{greetMsg}, {user.name.split(" ").length > 1 && user.name.split(" ")[0].length <= 3 ? user.name.split(" ").slice(0, 2).join(" ") : user.name.split(" ")[0]} 👋</h2>
                 <p style={{ margin: 0, color: TL, fontSize: 13 }}>{new Date().toLocaleDateString("en-NG", { weekday: "long", day: "numeric", month: "long", year: "numeric" })} · Yinlade Clinic, Abuja</p>
               </div>
-              <div className="stats-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(190px,1fr))", gap: isMobile ? 10 : 13, marginBottom: 24 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 14, marginBottom: 24 }}>
                 <StatCard label="Today's Appts" value={todayAppts.length} sub={`${todayAppts.filter(a => a.status === "confirmed").length} confirmed`} icon="cal" ac={G} acBg={GL} />
-                <StatCard label="Total Patients" value={patients.length} sub={`${patients.filter(p => p.status === "active").length} active`} icon="pts" ac={BL} acBg={BLL} />
-                <StatCard label="Outstanding" value={money(owedTotal)} sub="Across all patients" icon="bill" ac={AM} acBg={AML} />
-                <StatCard label="This Month Revenue" value={money(marchRevenue)} sub="Collected this month" icon="bar" ac={PU} acBg={PUL} />
+                <StatCard label="Total Patients" value={patients.length} sub={`+${patients.filter(p => p.status === "active").length} active`} icon="pts" ac={BL} acBg={BLL} />
+                {user.role === "Dentist" && (
+                  <>
+                    <StatCard label="This Month Revenue" value={money(marchRevenue)} sub="Collected this month" icon="bar" ac={PU} acBg={PUL} />
+                    <StatCard label="Total Received" value={money(invoices.reduce((s, i) => s + i.paid, 0))} sub="All time revenue" icon="bill" ac={G} acBg={GL} />
+                    <StatCard label="Outstanding Payments" value={money(owedTotal)} sub={`${invoices.filter(i => i.status !== "paid").length} unpaid invoices`} icon="bill" ac={AM} acBg={AML} />
+                  </>
+                )}
                 <StatCard label="Pending Tasks" value={pending.length} sub={`${pending.filter(t => t.priority === "high").length} high priority`} icon="task" ac={RD} acBg={RDL} />
               </div>
               <div className="widgets-grid" style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 16 }}>
@@ -1712,7 +1727,7 @@ export default function Page() {
                           onMouseEnter={e => e.currentTarget.style.background = SA}
                           onMouseLeave={e => e.currentTarget.style.background = "transparent"}
                           onClick={() => setOpenPatientId(p.id)}>
-                          <td style={{ padding: "12px 14px", color: TL, fontSize: 12, fontFamily: "monospace", fontWeight: 600 }}>{p.id}</td>
+                          <td style={{ padding: "12px 14px", color: TL, fontSize: 12, fontFamily: "monospace", fontWeight: 600 }}>{p.displayId || p.id}</td>
                           <td style={{ padding: "12px 14px" }}>
                             <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
                               <div style={{ width: 30, height: 30, borderRadius: "50%", background: `linear-gradient(135deg,${G},${GM})`, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontWeight: 700, fontSize: 10, flexShrink: 0 }}>
@@ -1725,7 +1740,7 @@ export default function Page() {
                             </div>
                           </td>
                           <td style={{ padding: "12px 14px", color: TM, fontSize: 13 }} onClick={e => e.stopPropagation()}>{p.phone}</td>
-                          <td style={{ padding: "12px 14px", color: TM, fontSize: 13 }}>{ageFromDob(p.dob) || "—"} yrs</td>
+                          <td style={{ padding: "12px 14px", color: TM, fontSize: 13 }}>{p.age || ageFromDob(p.dob) || "—"} yrs</td>
                           <td style={{ padding: "12px 14px", color: TM, fontSize: 13 }}>{p.lastVisit || "—"}</td>
                           <td style={{ padding: "12px 14px", color: p.balance > 0 ? AM : G, fontWeight: 700, fontSize: 13 }}>{money(p.balance)}</td>
                           <td style={{ padding: "12px 14px" }}><Bdg label={p.status} color={p.status === "active" ? "green" : "gray"} /></td>
@@ -1800,8 +1815,14 @@ export default function Page() {
                   <Field label="Full Name">
                     <input style={inputStyle} value={patientForm.name || ""} onChange={(e) => setPatientForm((p: any) => ({ ...p, name: e.target.value }))} />
                   </Field>
+                  <Field label="Patient ID (Optional, defaults to 4949/...)">
+                    <input style={inputStyle} value={patientForm.displayId || ""} onChange={(e) => setPatientForm((p: any) => ({ ...p, displayId: e.target.value }))} placeholder="e.g. 001/04/2026" />
+                  </Field>
                   <Field label="Date of Birth">
                     <input style={inputStyle} type="date" value={patientForm.dob || ""} onChange={(e) => setPatientForm((p: any) => ({ ...p, dob: e.target.value }))} />
+                  </Field>
+                  <Field label="Age (Optional)">
+                    <input style={inputStyle} type="number" value={patientForm.age || ""} onChange={(e) => setPatientForm((p: any) => ({ ...p, age: e.target.value }))} placeholder="Age if DOB is unknown" />
                   </Field>
                   <Field label="Gender">
                     <select style={inputStyle} value={patientForm.gender || "Female"} onChange={(e) => setPatientForm((p: any) => ({ ...p, gender: e.target.value }))}>
@@ -2101,10 +2122,12 @@ export default function Page() {
               </Btn>
             </div>
 
-            <div className="stats-grid" style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "1fr 1fr auto", gap: isMobile ? 10 : 14, marginBottom: 18 }}>
-              <StatCard icon="bill" label="Total Collected" value={money(invoices.reduce((s, i) => s + i.paid, 0))} sub={`${invoices.filter(i => i.status === "paid").length} paid invoices`} ac={G} acBg={GL} />
-              <StatCard icon="pulse" label="Outstanding" value={money(invoices.reduce((s, i) => s + (i.total - i.paid), 0))} sub={`${invoices.filter(i => i.status !== "paid").length} unpaid`} ac={AM} acBg={AML} />
-            </div>
+            {user.role === "Dentist" && (
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 14, marginBottom: 24 }}>
+                <StatCard icon="bill" label="Total Collected" value={money(invoices.reduce((s, i) => s + i.paid, 0))} sub={`${invoices.filter(i => i.status === "paid").length} paid invoices`} ac={G} acBg={GL} />
+                <StatCard icon="pulse" label="Outstanding" value={money(invoices.reduce((s, i) => s + (i.total - i.paid), 0))} sub={`${invoices.filter(i => i.status !== "paid").length} unpaid`} ac={AM} acBg={AML} />
+              </div>
+            )}
 
             {/* Billing filters */}
             <div style={{ display: "flex", gap: 10, marginBottom: 14, flexWrap: "wrap", alignItems: "center" }}>
@@ -2188,6 +2211,18 @@ export default function Page() {
                                   style={{ display: "flex", alignItems: "center", gap: 4, padding: "5px 10px", borderRadius: 8, border: `1.5px solid ${BL}33`, background: BLL, color: BL, fontWeight: 700, fontSize: 11, cursor: "pointer", fontFamily: "inherit" }}>
                                   <Ico n="file" s={12} /> PDF
                                 </button>
+                                <button onClick={() => { setInvoiceForm({ ...inv }); setInvoiceModal(true); }}
+                                  style={{ background: "none", border: "none", color: TM, cursor: "pointer", padding: 5, borderRadius: 6, display: "flex" }}
+                                  onMouseEnter={e => e.currentTarget.style.background = SA} onMouseLeave={e => e.currentTarget.style.background = "none"}><Ico n="edit" s={13} /></button>
+                                {user.role === "Dentist" && (
+                                  <button onClick={async () => {
+                                    if (!confirm("Delete this invoice?")) return;
+                                    await fetch(`/api/invoices/${inv.id}`, { method: "DELETE" });
+                                    refresh();
+                                  }}
+                                  style={{ background: "none", border: "none", color: "#ef4444", cursor: "pointer", padding: 5, borderRadius: 6, display: "flex" }}
+                                  onMouseEnter={e => e.currentTarget.style.background = "#fee2e2"} onMouseLeave={e => e.currentTarget.style.background = "none"}><Ico n="del" s={13} /></button>
+                                )}
                               </div>
                             </td>
                           </tr>
@@ -2276,13 +2311,17 @@ export default function Page() {
                       const patientId = invoiceForm.patientId || invoiceForm.pid;
                       const items = (invoiceForm.items || []).filter((x: any) => x.d && x.a);
                       if (!patientId || items.length === 0) return;
-                      await fetch("/api/invoices", {
-                        method: "POST",
+                      
+                      const method = invoiceForm.id ? "PATCH" : "POST";
+                      const url = invoiceForm.id ? `/api/invoices/${invoiceForm.id}` : "/api/invoices";
+
+                      await fetch(url, {
+                        method,
                         credentials: "include",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({
                           patientId,
-                          date: todayYMD(),
+                          date: invoiceForm.date || todayYMD(),
                           items: items.map((x: any) => ({ d: x.d, a: x.a })),
                         }),
                       });
@@ -2290,7 +2329,7 @@ export default function Page() {
                       await refresh();
                     }}
                   >
-                    Create Invoice
+                    {invoiceForm.id ? "Save Invoice" : "Create Invoice"}
                   </Btn>
                 </div>
               </Modal>

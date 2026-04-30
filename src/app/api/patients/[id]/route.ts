@@ -5,6 +5,8 @@ import { getAuthedStaff } from "@/lib/auth";
 
 const UpdatePatient = z.object({
   name: z.string().min(1).optional(),
+  age: z.union([z.string(), z.number()]).optional().or(z.literal("")).optional(),
+  displayId: z.string().optional().or(z.literal("")).optional(),
   dob: z.string().optional(),
   phone: z.string().optional(),
   email: z.string().email().optional().or(z.literal("")).optional(),
@@ -32,6 +34,8 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
   const { id } = await params;
   const update: Record<string, any> = {};
   if (body.data.name !== undefined) update.name = body.data.name;
+  if (body.data.age !== undefined) update.age = body.data.age || null;
+  if (body.data.displayId !== undefined) update.displayId = body.data.displayId || null;
   if (body.data.dob !== undefined) update.dob = body.data.dob || null;
   if (body.data.phone !== undefined) update.phone = body.data.phone;
   if (body.data.email !== undefined) update.email = body.data.email || null;

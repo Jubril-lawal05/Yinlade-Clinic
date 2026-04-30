@@ -5,6 +5,8 @@ import { getAuthedStaff } from "@/lib/auth";
 
 const CreatePatient = z.object({
   name: z.string().min(1),
+  age: z.union([z.string(), z.number()]).optional().or(z.literal("").transform(() => undefined)).optional(),
+  displayId: z.string().optional().or(z.literal("").transform(() => undefined)).optional(),
   dob: z.string().min(1).optional().or(z.literal("").transform(() => undefined)).optional(),
   phone: z.string().min(1),
   email: z.string().email().optional().or(z.literal("").transform(() => undefined)).optional(),
@@ -27,7 +29,7 @@ export async function GET() {
   const patients = snap.docs.map((d) => {
     const p = d.data();
     return {
-      id: d.id, name: p.name, dob: p.dob || "", phone: p.phone,
+      id: d.id, name: p.name, displayId: p.displayId || "", age: p.age || "", dob: p.dob || "", phone: p.phone,
       email: p.email, address: p.address, job: p.job, blood: p.blood,
       allergies: p.allergies, medical: p.medical, smoker: p.smoker,
       alcohol: p.alcohol, gender: p.gender, status: p.status,
@@ -49,8 +51,31 @@ export async function POST(req: Request) {
   const body = CreatePatient.safeParse(json);
   if (!body.success) return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
 
+  let customId = body.data.displayId;
+  if (!customId) {
+    const snap = await db.collection("patients").get();
+    let maxNum = 4948;
+    snap.docs.forEach((d) => {
+      const p = d.data();
+      if (p.displayId) {
+        const match = String(p.displayId).match(/^(\d+)\/\d{2}\/\d{4}$/);
+        if (match) {
+          const num = parseInt(match[1], 10);
+          if (num > maxNum) maxNum = num;
+        }
+      }
+    });
+    const nextNum = maxNum + 1;
+    const d = new Date();
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const yyyy = d.getFullYear();
+    customId = `${nextNum}/${mm}/${yyyy}`;
+  }
+
   const docRef = await db.collection("patients").add({
     name: body.data.name,
+    displayId: customId,
+    age: body.data.age || null,
     dob: body.data.dob || null,
     phone: body.data.phone,
     email: body.data.email || null,

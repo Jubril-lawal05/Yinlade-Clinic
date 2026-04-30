@@ -68,7 +68,7 @@ export async function GET() {
     patients: patientSnap.docs.map((d) => {
       const p = d.data();
       return {
-        id: d.id, name: p.name, dob: p.dob || "",
+        id: d.id, name: p.name, displayId: p.displayId || "", age: p.age || "", dob: p.dob || "",
         phone: p.phone, email: p.email, address: p.address, job: p.job,
         blood: p.blood, allergies: p.allergies, medical: p.medical,
         smoker: p.smoker, alcohol: p.alcohol, gender: p.gender,
@@ -89,7 +89,7 @@ export async function GET() {
       const i = d.data();
       return {
         id: d.id, pid: i.patientId, pname: patientMap.get(i.patientId) || "",
-        date: i.date, total: decToNumber(i.total), paid: decToNumber(i.paid), status: i.status,
+        date: i.date, total: decToNumber(i.total), paid: decToNumber(i.paid), status: i.status, items: i.items || [],
       };
     }),
     tasks: taskSnap.docs.map((d) => {

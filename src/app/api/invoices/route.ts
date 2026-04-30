@@ -42,6 +42,7 @@ export async function GET() {
         id: d.id, pid: i.patientId, pname: patientMap.get(i.patientId) || "",
         date: i.date, total: typeof i.total === "number" ? i.total : 0,
         paid: typeof i.paid === "number" ? i.paid : 0, status: i.status,
+        items: i.items || [],
       };
     }),
   });
