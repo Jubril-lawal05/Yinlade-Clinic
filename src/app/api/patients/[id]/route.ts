@@ -21,6 +21,25 @@ const UpdatePatient = z.object({
   status: z.enum(["active", "inactive"]).optional(),
 });
 
+const FIRESTORE_BATCH_LIMIT = 450;
+
+async function deleteByQuery(query: FirebaseFirestore.Query) {
+  const PAGE = FIRESTORE_BATCH_LIMIT;
+  let total = 0;
+  // Loop until the query returns nothing.
+  // Each loop: fetch up to PAGE doc refs, delete them in one batch.
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
+    const snap = await query.limit(PAGE).select().get();
+    if (snap.empty) return total;
+    const batch = db.batch();
+    snap.docs.forEach((d) => batch.delete(d.ref));
+    await batch.commit();
+    total += snap.size;
+    if (snap.size < PAGE) return total;
+  }
+}
+
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const staff = await getAuthedStaff();
   if (!staff) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -60,23 +79,28 @@ export async function DELETE(_req: Request, { params }: { params: Promise<{ id: 
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   const { id } = await params;
-  const batch = db.batch();
 
-  batch.delete(db.collection("patients").doc(id));
-  batch.delete(db.collection("clinicalRecords").doc(id));
-
-  const [noteSnap, apptSnap, invSnap, msgSnap] = await Promise.all([
-    db.collection("treatmentNotes").where("patientId", "==", id).get(),
-    db.collection("appointments").where("patientId", "==", id).get(),
-    db.collection("invoices").where("patientId", "==", id).get(),
-    db.collection("messages").where("patientId", "==", id).get(),
+  // Delete in pages to stay under the 500-op batch limit.
+  // Order matters only loosely; each child is independent of the parent doc.
+  await Promise.all([
+    deleteByQuery(db.collection("treatmentNotes").where("patientId", "==", id)),
+    deleteByQuery(db.collection("appointments").where("patientId", "==", id)),
+    deleteByQuery(db.collection("invoices").where("patientId", "==", id)),
+    deleteByQuery(db.collection("messages").where("patientId", "==", id)),
   ]);
 
-  noteSnap.docs.forEach((d) => batch.delete(d.ref));
-  apptSnap.docs.forEach((d) => batch.delete(d.ref));
-  invSnap.docs.forEach((d) => batch.delete(d.ref));
-  msgSnap.docs.forEach((d) => batch.delete(d.ref));
+  // Best-effort: remove invoice payments orphaned by the invoice deletes above.
+  // (Rare, but keeps the payments collection clean.)
+  await deleteByQuery(
+    db.collection("payments").where("patientId", "==", id),
+  ).catch(() => {
+    // payments may not have a patientId field on older records — ignore.
+  });
 
-  await batch.commit();
+  await Promise.all([
+    db.collection("patients").doc(id).delete(),
+    db.collection("clinicalRecords").doc(id).delete(),
+  ]);
+
   return NextResponse.json({ ok: true });
 }

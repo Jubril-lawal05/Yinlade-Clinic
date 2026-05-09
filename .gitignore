@@ -13,11 +13,6 @@ dist/
 .env.local
 .env*.local
 
-# Database
-prisma/dev.db
-prisma/dev.db-journal
-prisma/*.db
-
 # Caches
 .cache/
 .npm-cache/

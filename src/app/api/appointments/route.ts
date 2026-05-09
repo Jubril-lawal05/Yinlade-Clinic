@@ -50,9 +50,24 @@ export async function POST(req: Request) {
   const body = AppointmentCreate.safeParse(json);
   if (!body.success) return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
 
+  const dentistId = body.data.dentistId || staff.id;
+
+  // Reject double-booking: same dentist + date + time slot.
+  const conflict = await db
+    .collection("appointments")
+    .where("dentistId", "==", dentistId)
+    .where("date", "==", body.data.date)
+    .where("time", "==", body.data.time)
+    .where("status", "in", ["pending", "confirmed"])
+    .limit(1)
+    .get();
+
+  if (!conflict.empty)
+    return NextResponse.json({ error: "Slot already booked for this dentist" }, { status: 409 });
+
   const docRef = await db.collection("appointments").add({
     patientId: body.data.patientId,
-    dentistId: body.data.dentistId || staff.id,
+    dentistId,
     date: body.data.date,
     time: body.data.time,
     type: body.data.type,
@@ -63,7 +78,7 @@ export async function POST(req: Request) {
 
   const [patientDoc, dentistDoc] = await Promise.all([
     db.collection("patients").doc(body.data.patientId).get(),
-    db.collection("staff").doc(body.data.dentistId || staff.id).get(),
+    db.collection("staff").doc(dentistId).get(),
   ]);
 
   return NextResponse.json({

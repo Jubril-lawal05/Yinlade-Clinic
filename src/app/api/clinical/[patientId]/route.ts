@@ -29,6 +29,17 @@ const ClinicalBody = z.object({
   notes: z.array(NoteSchema).optional().default([]),
 });
 
+const FIRESTORE_BATCH_LIMIT = 450; // Firestore limit is 500; leave headroom.
+
+async function commitInChunks(ops: Array<(b: FirebaseFirestore.WriteBatch) => void>) {
+  for (let i = 0; i < ops.length; i += FIRESTORE_BATCH_LIMIT) {
+    const slice = ops.slice(i, i + FIRESTORE_BATCH_LIMIT);
+    const batch = db.batch();
+    slice.forEach((apply) => apply(batch));
+    await batch.commit();
+  }
+}
+
 export async function GET(_req: Request, { params }: { params: Promise<{ patientId: string }> }) {
   const staff = await getAuthedStaff();
   if (!staff) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -43,10 +54,26 @@ export async function GET(_req: Request, { params }: { params: Promise<{ patient
   const staffMap = new Map<string, string>();
   staffSnap.docs.forEach((d) => staffMap.set(d.id, d.data().name));
 
+  const notes = noteSnap.docs
+    .sort((a, b) => (b.data().date > a.data().date ? 1 : -1))
+    .map((d) => {
+      const n = d.data();
+      return {
+        id: d.id,
+        date: n.date || "",
+        dentist: staffMap.get(n.createdById) || "",
+        procedure: n.procedure,
+        teeth: n.teeth || "",
+        description: n.description || "",
+        medications: n.medications || "",
+        followUp: n.followUp || "",
+      };
+    });
+
   if (!crDoc.exists) {
     return NextResponse.json({
       odontogram: {}, complaint: "", bp: "", pulse: "", temp: "",
-      resp: "", extraOral: "", intraOral: "", occlusion: "", notes: [],
+      resp: "", extraOral: "", intraOral: "", occlusion: "", notes,
     });
   }
 
@@ -61,16 +88,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ patient
     extraOral: cr.extraOral || "",
     intraOral: cr.intraOral || "",
     occlusion: cr.occlusion || "",
-    notes: noteSnap.docs.sort((a, b) => (b.data().date > a.data().date ? 1 : -1)).map((d) => {
-      const n = d.data();
-      return {
-        id: d.id, date: n.date || "",
-        dentist: staffMap.get(n.createdById) || "",
-        procedure: n.procedure, teeth: n.teeth || "",
-        description: n.description || "", medications: n.medications || "",
-        followUp: n.followUp || "",
-      };
-    }),
+    notes,
   });
 }
 
@@ -85,45 +103,71 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ patien
   if (!body.success) return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
 
   const crRef = db.collection("clinicalRecords").doc(patientId);
-  await crRef.set({
-    patientId,
-    odontogram: body.data.odontogram,
-    complaint: body.data.complaint,
-    bp: body.data.bp || null,
-    pulse: body.data.pulse || null,
-    temp: body.data.temp || null,
-    resp: body.data.resp || null,
-    extraOral: body.data.extraOral || null,
-    intraOral: body.data.intraOral || null,
-    occlusion: body.data.occlusion || null,
-    updatedAt: FieldValue.serverTimestamp(),
-  }, { merge: false });
+  const patientRef = db.collection("patients").doc(patientId);
 
-  const existingNotes = await db.collection("treatmentNotes").where("patientId", "==", patientId).get();
-  const batch = db.batch();
-  existingNotes.docs.forEach((d) => batch.delete(d.ref));
+  const existing = await db
+    .collection("treatmentNotes")
+    .where("patientId", "==", patientId)
+    .select() // ids only — avoids pulling note bodies we already have client-side
+    .get();
 
-  for (const n of body.data.notes) {
-    const ref = db.collection("treatmentNotes").doc(n.id);
-    batch.set(ref, {
-      patientId,
-      createdById: staff.id,
-      date: n.date,
-      procedure: n.procedure,
-      teeth: n.teeth || null,
-      description: n.description || null,
-      medications: n.medications || null,
-      followUp: n.followUp || null,
-      createdAt: FieldValue.serverTimestamp(),
-    });
-  }
+  const existingIds = new Set(existing.docs.map((d) => d.id));
+  const incomingIds = new Set(body.data.notes.map((n) => n.id));
 
-  await batch.commit();
+  const toDelete = [...existingIds].filter((id) => !incomingIds.has(id));
+  const toUpsert = body.data.notes;
 
-  // Update patient lastVisit
-  await db.collection("patients").doc(patientId).update({
-    lastVisit: new Date().toISOString().slice(0, 10),
+  const ops: Array<(b: FirebaseFirestore.WriteBatch) => void> = [];
+
+  ops.push((b) => {
+    b.set(
+      crRef,
+      {
+        patientId,
+        odontogram: body.data.odontogram,
+        complaint: body.data.complaint,
+        bp: body.data.bp || null,
+        pulse: body.data.pulse || null,
+        temp: body.data.temp || null,
+        resp: body.data.resp || null,
+        extraOral: body.data.extraOral || null,
+        intraOral: body.data.intraOral || null,
+        occlusion: body.data.occlusion || null,
+        updatedAt: FieldValue.serverTimestamp(),
+      },
+      { merge: true },
+    );
   });
 
+  ops.push((b) => {
+    b.update(patientRef, { lastVisit: new Date().toISOString().slice(0, 10) });
+  });
+
+  for (const id of toDelete) {
+    ops.push((b) => b.delete(db.collection("treatmentNotes").doc(id)));
+  }
+
+  for (const n of toUpsert) {
+    const ref = db.collection("treatmentNotes").doc(n.id);
+    ops.push((b) =>
+      b.set(
+        ref,
+        {
+          patientId,
+          createdById: staff.id,
+          date: n.date,
+          procedure: n.procedure,
+          teeth: n.teeth || null,
+          description: n.description || null,
+          medications: n.medications || null,
+          followUp: n.followUp || null,
+          updatedAt: FieldValue.serverTimestamp(),
+        },
+        { merge: true },
+      ),
+    );
+  }
+
+  await commitInChunks(ops);
   return NextResponse.json({ ok: true });
 }

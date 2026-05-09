@@ -21,24 +21,75 @@ const CreatePatient = z.object({
   status: z.enum(["active", "inactive"]).optional(),
 });
 
-export async function GET() {
+const PATIENT_COUNTER_SEED = 4949;
+const PATIENT_PAGE_SIZE = 50;
+const PATIENT_PAGE_MAX = 200;
+
+function patientFromDoc(d: FirebaseFirestore.QueryDocumentSnapshot) {
+  const p = d.data();
+  return {
+    id: d.id,
+    name: p.name,
+    displayId: p.displayId || "",
+    age: p.age || "",
+    dob: p.dob || "",
+    phone: p.phone,
+    email: p.email,
+    address: p.address,
+    job: p.job,
+    blood: p.blood,
+    allergies: p.allergies,
+    medical: p.medical,
+    smoker: p.smoker,
+    alcohol: p.alcohol,
+    gender: p.gender,
+    status: p.status,
+    balance: typeof p.balance === "number" ? p.balance : 0,
+    lastVisit: p.lastVisit || "",
+  };
+}
+
+export async function GET(req: Request) {
   const staff = await getAuthedStaff();
   if (!staff) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const snap = await db.collection("patients").orderBy("createdAt", "desc").get();
-  const patients = snap.docs.map((d) => {
-    const p = d.data();
-    return {
-      id: d.id, name: p.name, displayId: p.displayId || "", age: p.age || "", dob: p.dob || "", phone: p.phone,
-      email: p.email, address: p.address, job: p.job, blood: p.blood,
-      allergies: p.allergies, medical: p.medical, smoker: p.smoker,
-      alcohol: p.alcohol, gender: p.gender, status: p.status,
-      balance: typeof p.balance === "number" ? p.balance : 0,
-      lastVisit: p.lastVisit || "",
-    };
-  });
+  const url = new URL(req.url);
+  const limit = Math.min(
+    PATIENT_PAGE_MAX,
+    Math.max(1, Number(url.searchParams.get("limit") ?? PATIENT_PAGE_SIZE) || PATIENT_PAGE_SIZE),
+  );
+  const cursor = url.searchParams.get("cursor");
 
-  return NextResponse.json({ patients });
+  let query: FirebaseFirestore.Query = db
+    .collection("patients")
+    .orderBy("createdAt", "desc")
+    .limit(limit);
+
+  if (cursor) {
+    const cursorDoc = await db.collection("patients").doc(cursor).get();
+    if (cursorDoc.exists) query = query.startAfter(cursorDoc);
+  }
+
+  const snap = await query.get();
+  const patients = snap.docs.map(patientFromDoc);
+  const nextCursor = snap.docs.length === limit ? snap.docs[snap.docs.length - 1].id : null;
+
+  return NextResponse.json({ patients, nextCursor });
+}
+
+async function nextPatientDisplayId(): Promise<string> {
+  const counterRef = db.collection("counters").doc("patient");
+  const next = await db.runTransaction(async (tx) => {
+    const snap = await tx.get(counterRef);
+    const current = snap.exists ? Number(snap.data()?.value || PATIENT_COUNTER_SEED) : PATIENT_COUNTER_SEED;
+    const value = current + 1;
+    tx.set(counterRef, { value, updatedAt: FieldValue.serverTimestamp() }, { merge: true });
+    return value;
+  });
+  const d = new Date();
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const yyyy = d.getFullYear();
+  return `${next}/${mm}/${yyyy}`;
 }
 
 export async function POST(req: Request) {
@@ -51,26 +102,7 @@ export async function POST(req: Request) {
   const body = CreatePatient.safeParse(json);
   if (!body.success) return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
 
-  let customId = body.data.displayId;
-  if (!customId) {
-    const snap = await db.collection("patients").get();
-    let maxNum = 4948;
-    snap.docs.forEach((d) => {
-      const p = d.data();
-      if (p.displayId) {
-        const match = String(p.displayId).match(/^(\d+)\/\d{2}\/\d{4}$/);
-        if (match) {
-          const num = parseInt(match[1], 10);
-          if (num > maxNum) maxNum = num;
-        }
-      }
-    });
-    const nextNum = maxNum + 1;
-    const d = new Date();
-    const mm = String(d.getMonth() + 1).padStart(2, "0");
-    const yyyy = d.getFullYear();
-    customId = `${nextNum}/${mm}/${yyyy}`;
-  }
+  const customId = body.data.displayId || (await nextPatientDisplayId());
 
   const docRef = await db.collection("patients").add({
     name: body.data.name,
@@ -93,5 +125,5 @@ export async function POST(req: Request) {
     createdAt: FieldValue.serverTimestamp(),
   });
 
-  return NextResponse.json({ patient: { id: docRef.id } });
+  return NextResponse.json({ patient: { id: docRef.id, displayId: customId } });
 }

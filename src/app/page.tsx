@@ -1148,11 +1148,22 @@ export default function Page() {
     setUser(data.user);
     setStaff(data.staff);
     setPatients(data.patients);
-    setClinical(data.clinical);
+    setClinical((prev) => ({ ...prev, ...data.clinical }));
     setAppts(data.appts);
     setInvoices(data.invoices);
     setTasks(data.tasks);
     setMessages(data.messages);
+  }
+
+  async function loadClinical(patientId: string) {
+    try {
+      const r = await fetch(`/api/clinical/${patientId}`, { credentials: "include" });
+      if (!r.ok) return;
+      const data = (await r.json()) as ClinicalRecord;
+      setClinical((prev) => ({ ...prev, [patientId]: data }));
+    } catch {
+      // network error — leave previous value (or empty default in render)
+    }
   }
 
   useEffect(() => {
@@ -1195,6 +1206,13 @@ export default function Page() {
   const [patientModal, setPatientModal] = useState<null | "add" | "edit">(null);
   const [patientForm, setPatientForm] = useState<any>({});
   const currentPatient = patients.find((p) => p.id === openPatientId) || null;
+
+  useEffect(() => {
+    if (openPatientId && !clinical[openPatientId]) {
+      loadClinical(openPatientId);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [openPatientId]);
 
   const [patientQueryRaw, setPatientQueryRaw] = useState("");
   const [patientQuery, setPatientQuery] = useState("");
@@ -1290,7 +1308,14 @@ export default function Page() {
       alert("Failed to save clinical record.");
       return;
     }
-    await refresh();
+    await loadClinical(currentPatient.id);
+    setPatients((prev) =>
+      prev.map((p) =>
+        p.id === currentPatient.id
+          ? { ...p, lastVisit: new Date().toISOString().slice(0, 10) }
+          : p,
+      ),
+    );
   }
 
   // Appointment UI state
@@ -1776,8 +1801,8 @@ export default function Page() {
                         acc.push(n);
                         return acc;
                       }, []).map((n, i) => typeof n === "string"
-                        ? <span key={i} style={{ padding: "5px 8px", color: TL }}>…</span>
-                        : <button key={n} onClick={() => setPatientPage(n as number)}
+                        ? <span key={`ellipsis-${i}`} style={{ padding: "5px 8px", color: TL }}>…</span>
+                        : <button key={`page-${n}`} onClick={() => setPatientPage(n as number)}
                             style={{ background: patientPage === n ? G : SU, color: patientPage === n ? "#fff" : TX, border: `1px solid ${patientPage === n ? G : BR}`, borderRadius: 8, padding: "5px 11px", cursor: "pointer", fontWeight: 600, fontFamily: "inherit" }}>{n}</button>
                       )}
                       <button onClick={() => setPatientPage(p => Math.min(patientPageCount, p + 1))} disabled={patientPage === patientPageCount}

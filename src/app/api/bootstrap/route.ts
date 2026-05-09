@@ -12,102 +12,75 @@ function decToNumber(d: any) {
 
 export async function GET() {
   try {
-  const staff = await getAuthedStaff();
-  if (!staff) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const staff = await getAuthedStaff();
+    if (!staff) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const [staffSnap, patientSnap, crSnap, apptSnap, invSnap, taskSnap, msgSnap] = await Promise.all([
-    db.collection("staff").get(),
-    db.collection("patients").orderBy("createdAt", "desc").get(),
-    db.collection("clinicalRecords").get(),
-    db.collection("appointments").orderBy("date", "asc").get(),
-    db.collection("invoices").orderBy("date", "desc").get(),
-    db.collection("tasks").orderBy("due", "asc").get(),
-    db.collection("messages").orderBy("createdAt", "desc").get(),
-  ]);
+    const [staffSnap, patientSnap, apptSnap, invSnap, taskSnap, msgSnap] = await Promise.all([
+      db.collection("staff").get(),
+      db.collection("patients").orderBy("createdAt", "desc").get(),
+      db.collection("appointments").orderBy("date", "asc").get(),
+      db.collection("invoices").orderBy("date", "desc").get(),
+      db.collection("tasks").orderBy("due", "asc").get(),
+      db.collection("messages").orderBy("createdAt", "desc").limit(500).get(),
+    ]);
 
-  const staffMap = new Map<string, string>();
-  staffSnap.docs.forEach((d) => staffMap.set(d.id, d.data().name));
+    const staffMap = new Map<string, string>();
+    staffSnap.docs.forEach((d) => staffMap.set(d.id, d.data().name));
 
-  const patientMap = new Map<string, string>();
-  patientSnap.docs.forEach((d) => patientMap.set(d.id, d.data().name));
+    const patientMap = new Map<string, string>();
+    patientSnap.docs.forEach((d) => patientMap.set(d.id, d.data().name));
 
-  // Build clinical records with treatment notes
-  const noteSnaps = await Promise.all(
-    crSnap.docs.map((cr) =>
-      db.collection("treatmentNotes").where("patientId", "==", cr.id).get()
-    )
-  );
-
-  const clinical: Record<string, any> = {};
-  crSnap.docs.forEach((cr, i) => {
-    const c = cr.data();
-    const notes = noteSnaps[i].docs.sort((a, b) => (b.data().date > a.data().date ? 1 : -1)).map((n) => {
-      const nd = n.data();
-      return {
-        id: n.id, date: nd.date || "",
-        dentist: staffMap.get(nd.createdById) || "",
-        procedure: nd.procedure, teeth: nd.teeth || "",
-        description: nd.description || "", medications: nd.medications || "",
-        followUp: nd.followUp || "",
-      };
+    return NextResponse.json({
+      user: staff,
+      staff: staffSnap.docs.map((d) => {
+        const s = d.data();
+        return { id: d.id, name: s.name, role: s.role, email: s.email, avatar: s.avatar };
+      }),
+      patients: patientSnap.docs.map((d) => {
+        const p = d.data();
+        return {
+          id: d.id, name: p.name, displayId: p.displayId || "", age: p.age || "", dob: p.dob || "",
+          phone: p.phone, email: p.email, address: p.address, job: p.job,
+          blood: p.blood, allergies: p.allergies, medical: p.medical,
+          smoker: p.smoker, alcohol: p.alcohol, gender: p.gender,
+          status: p.status, balance: decToNumber(p.balance),
+          lastVisit: p.lastVisit || "",
+        };
+      }),
+      // Clinical records are loaded on demand via GET /api/clinical/[patientId].
+      // Preloading them caused an N+1 (one query per clinical record for treatment notes).
+      clinical: {},
+      appts: apptSnap.docs.map((d) => {
+        const a = d.data();
+        return {
+          id: d.id, pid: a.patientId, pname: patientMap.get(a.patientId) || "",
+          date: a.date, time: a.time, type: a.type,
+          dentist: staffMap.get(a.dentistId) || "", status: a.status, notes: a.notes || "",
+        };
+      }),
+      invoices: invSnap.docs.map((d) => {
+        const i = d.data();
+        return {
+          id: d.id, pid: i.patientId, pname: patientMap.get(i.patientId) || "",
+          date: i.date, total: decToNumber(i.total), paid: decToNumber(i.paid), status: i.status, items: i.items || [],
+        };
+      }),
+      tasks: taskSnap.docs.map((d) => {
+        const t = d.data();
+        return {
+          id: d.id, title: t.title, priority: t.priority,
+          due: t.due, done: t.done || false, who: staffMap.get(t.assignedToId) || "",
+        };
+      }),
+      messages: msgSnap.docs.map((d) => {
+        const m = d.data();
+        return {
+          id: d.id, patientId: m.patientId, patient: patientMap.get(m.patientId) || "",
+          type: m.type === "FollowUp" ? "Follow-up" : m.type,
+          content: m.content, date: tsToYMD(m.createdAt), sender: staffMap.get(m.senderId) || "",
+        };
+      }),
     });
-    clinical[cr.id] = {
-      odontogram: c.odontogram || {}, complaint: c.complaint || "",
-      bp: c.bp || "", pulse: c.pulse || "", temp: c.temp || "",
-      resp: c.resp || "", extraOral: c.extraOral || "",
-      intraOral: c.intraOral || "", occlusion: c.occlusion || "", notes,
-    };
-  });
-
-  return NextResponse.json({
-    user: staff,
-    staff: staffSnap.docs.map((d) => {
-      const s = d.data();
-      return { id: d.id, name: s.name, role: s.role, email: s.email, avatar: s.avatar };
-    }),
-    patients: patientSnap.docs.map((d) => {
-      const p = d.data();
-      return {
-        id: d.id, name: p.name, displayId: p.displayId || "", age: p.age || "", dob: p.dob || "",
-        phone: p.phone, email: p.email, address: p.address, job: p.job,
-        blood: p.blood, allergies: p.allergies, medical: p.medical,
-        smoker: p.smoker, alcohol: p.alcohol, gender: p.gender,
-        status: p.status, balance: decToNumber(p.balance),
-        lastVisit: p.lastVisit || "",
-      };
-    }),
-    clinical,
-    appts: apptSnap.docs.map((d) => {
-      const a = d.data();
-      return {
-        id: d.id, pid: a.patientId, pname: patientMap.get(a.patientId) || "",
-        date: a.date, time: a.time, type: a.type,
-        dentist: staffMap.get(a.dentistId) || "", status: a.status, notes: a.notes || "",
-      };
-    }),
-    invoices: invSnap.docs.map((d) => {
-      const i = d.data();
-      return {
-        id: d.id, pid: i.patientId, pname: patientMap.get(i.patientId) || "",
-        date: i.date, total: decToNumber(i.total), paid: decToNumber(i.paid), status: i.status, items: i.items || [],
-      };
-    }),
-    tasks: taskSnap.docs.map((d) => {
-      const t = d.data();
-      return {
-        id: d.id, title: t.title, priority: t.priority,
-        due: t.due, done: t.done || false, who: staffMap.get(t.assignedToId) || "",
-      };
-    }),
-    messages: msgSnap.docs.map((d) => {
-      const m = d.data();
-      return {
-        id: d.id, patientId: m.patientId, patient: patientMap.get(m.patientId) || "",
-        type: m.type === "FollowUp" ? "Follow-up" : m.type,
-        content: m.content, date: tsToYMD(m.createdAt), sender: staffMap.get(m.senderId) || "",
-      };
-    }),
-  });
   } catch (e) {
     console.error("[bootstrap] error:", e);
     return NextResponse.json({ error: String(e instanceof Error ? e.message : e) }, { status: 500 });

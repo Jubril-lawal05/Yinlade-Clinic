@@ -7,15 +7,6 @@ const Body = z.object({
   amount: z.union([z.string(), z.number()]),
 });
 
-async function recalcPatientBalance(patientId: string) {
-  const invSnap = await db.collection("invoices").where("patientId", "==", patientId).get();
-  const outstanding = invSnap.docs.reduce((sum, d) => {
-    const i = d.data();
-    return sum + ((i.total || 0) - (i.paid || 0));
-  }, 0);
-  await db.collection("patients").doc(patientId).update({ balance: outstanding });
-}
-
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const staff = await getAuthedStaff();
   if (!staff) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -27,27 +18,49 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
   if (!body.success) return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
 
   const amountNum = Number(body.data.amount);
-  if (!amountNum || amountNum <= 0)
+  if (!Number.isFinite(amountNum) || amountNum <= 0)
     return NextResponse.json({ error: "Invalid amount" }, { status: 400 });
 
   const { id } = await params;
-  const invDoc = await db.collection("invoices").doc(id).get();
-  if (!invDoc.exists) return NextResponse.json({ error: "Invoice not found" }, { status: 404 });
+  const invRef = db.collection("invoices").doc(id);
+  const paymentRef = db.collection("payments").doc();
 
-  const inv = invDoc.data()!;
-  const newPaid = Math.min((inv.paid || 0) + amountNum, inv.total || 0);
-  const status = newPaid >= (inv.total || 0) ? "paid" : newPaid > 0 ? "partial" : "unpaid";
+  try {
+    await db.runTransaction(async (tx) => {
+      const invSnap = await tx.get(invRef);
+      if (!invSnap.exists) throw new Error("Invoice not found");
 
-  await Promise.all([
-    db.collection("payments").add({
-      invoiceId: id,
-      amount: amountNum,
-      recordedById: staff.id,
-      createdAt: FieldValue.serverTimestamp(),
-    }),
-    db.collection("invoices").doc(id).update({ paid: newPaid, status }),
-  ]);
+      const inv = invSnap.data()!;
+      const total = Number(inv.total) || 0;
+      const paid = Number(inv.paid) || 0;
 
-  await recalcPatientBalance(inv.patientId);
+      // Cap payment at remaining balance — prevents two simultaneous payments overpaying.
+      const applied = Math.min(amountNum, Math.max(0, total - paid));
+      if (applied <= 0) throw new Error("Invoice already paid");
+
+      const newPaid = paid + applied;
+      const status = newPaid >= total ? "paid" : "partial";
+
+      const patientRef = db.collection("patients").doc(String(inv.patientId));
+      await tx.get(patientRef);
+
+      tx.update(invRef, { paid: newPaid, status });
+      tx.set(paymentRef, {
+        invoiceId: id,
+        patientId: inv.patientId,
+        amount: applied,
+        recordedById: staff.id,
+        createdAt: FieldValue.serverTimestamp(),
+      });
+      tx.update(patientRef, { balance: FieldValue.increment(-applied) });
+    });
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : "Payment failed";
+    const status =
+      msg === "Invoice not found" ? 404 :
+      msg === "Invoice already paid" ? 409 : 500;
+    return NextResponse.json({ error: msg }, { status });
+  }
+
   return NextResponse.json({ ok: true });
 }

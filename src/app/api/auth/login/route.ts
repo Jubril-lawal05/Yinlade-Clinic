@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { db } from "@/lib/firebase-admin";
-import { Filter } from "firebase-admin/firestore";
 import { getJwtCookieName, signAuthToken } from "@/lib/auth";
 
 const Body = z.object({
@@ -26,29 +25,35 @@ export async function POST(req: Request) {
   const body = Body.safeParse(json);
   if (!body.success) return NextResponse.json({ error: "Invalid request" }, { status: 400 });
 
-  let snap;
+  const identifier = body.data.email.trim();
+
+  let doc;
   try {
-    snap = await db.collection("staff")
-      .where(Filter.or(
-        Filter.where("email", "==", body.data.email),
-        Filter.where("name", "==", body.data.email)
-      ))
-      .limit(1)
-      .get();
+    const byEmail = await db.collection("staff").where("email", "==", identifier).limit(1).get();
+    if (!byEmail.empty) {
+      doc = byEmail.docs[0];
+    } else {
+      const byName = await db.collection("staff").where("name", "==", identifier).limit(1).get();
+      if (!byName.empty) doc = byName.docs[0];
+    }
   } catch (e) {
-    console.error("[login] Firestore error:", e);
-    return NextResponse.json({ error: "Database error", detail: e instanceof Error ? e.message : String(e) }, { status: 500 });
+    console.error("[login] Firestore error");
+    return NextResponse.json({ error: "Database error" }, { status: 500 });
   }
-  if (snap.empty) return NextResponse.json({ error: "Incorrect name, email, or password" }, { status: 401 });
 
+  if (!doc) return NextResponse.json({ error: "Incorrect name, email, or password" }, { status: 401 });
 
-  const doc = snap.docs[0];
   const staff = doc.data();
-
   const ok = await bcrypt.compare(body.data.password, staff.passwordHash);
   if (!ok) return NextResponse.json({ error: "Incorrect email or password" }, { status: 401 });
 
-  const token = signAuthToken({ sub: doc.id, role: staff.role, name: staff.name });
+  const token = signAuthToken({
+    sub: doc.id,
+    role: staff.role,
+    name: staff.name,
+    email: staff.email || "",
+    avatar: staff.avatar || "",
+  });
 
   const res = NextResponse.json({
     user: { id: doc.id, name: staff.name, role: staff.role, email: staff.email, avatar: staff.avatar },
