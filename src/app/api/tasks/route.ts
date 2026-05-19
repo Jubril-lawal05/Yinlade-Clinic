@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { db, FieldValue } from "@/lib/firebase-admin";
 import { getAuthedStaff } from "@/lib/auth";
+import { getStaffMap } from "@/lib/staff-cache";
 
 const CreateTask = z.object({
   title: z.string().min(1),
@@ -15,13 +16,10 @@ export async function GET() {
   const staff = await getAuthedStaff();
   if (!staff) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const [taskSnap, staffSnap] = await Promise.all([
-    db.collection("tasks").orderBy("due", "asc").get(),
-    db.collection("staff").get(),
+  const [taskSnap, staffMap] = await Promise.all([
+    db.collection("tasks").orderBy("due", "asc").limit(200).get(),
+    getStaffMap(),
   ]);
-
-  const staffMap = new Map<string, string>();
-  staffSnap.docs.forEach((d) => staffMap.set(d.id, d.data().name));
 
   return NextResponse.json({
     tasks: taskSnap.docs.map((d) => {

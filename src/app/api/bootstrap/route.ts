@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getAuthedStaff } from "@/lib/auth";
 import { db, tsToYMD } from "@/lib/firebase-admin";
+import { getStaffList, getStaffMap } from "@/lib/staff-cache";
 
 function decToNumber(d: any) {
   if (d == null) return 0;
@@ -15,27 +16,22 @@ export async function GET() {
     const staff = await getAuthedStaff();
     if (!staff) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-    const [staffSnap, patientSnap, apptSnap, invSnap, taskSnap, msgSnap] = await Promise.all([
-      db.collection("staff").get(),
-      db.collection("patients").orderBy("createdAt", "desc").get(),
-      db.collection("appointments").orderBy("date", "asc").get(),
-      db.collection("invoices").orderBy("date", "desc").get(),
-      db.collection("tasks").orderBy("due", "asc").get(),
-      db.collection("messages").orderBy("createdAt", "desc").limit(500).get(),
+    const [staffList, staffMap, patientSnap, apptSnap, invSnap, taskSnap, msgSnap] = await Promise.all([
+      getStaffList(),
+      getStaffMap(),
+      db.collection("patients").orderBy("createdAt", "desc").limit(200).get(),
+      db.collection("appointments").orderBy("date", "asc").limit(200).get(),
+      db.collection("invoices").orderBy("date", "desc").limit(200).get(),
+      db.collection("tasks").orderBy("due", "asc").limit(200).get(),
+      db.collection("messages").orderBy("createdAt", "desc").limit(200).get(),
     ]);
-
-    const staffMap = new Map<string, string>();
-    staffSnap.docs.forEach((d) => staffMap.set(d.id, d.data().name));
 
     const patientMap = new Map<string, string>();
     patientSnap.docs.forEach((d) => patientMap.set(d.id, d.data().name));
 
     return NextResponse.json({
       user: staff,
-      staff: staffSnap.docs.map((d) => {
-        const s = d.data();
-        return { id: d.id, name: s.name, role: s.role, email: s.email, avatar: s.avatar };
-      }),
+      staff: staffList,
       patients: patientSnap.docs.map((d) => {
         const p = d.data();
         return {

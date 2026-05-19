@@ -1276,13 +1276,15 @@ export default function Page() {
     if (patientModal === "add") {
       const r = await fetch("/api/patients", { method: "POST", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
       if (!r.ok) return;
+      const data = await r.json();
+      setPatients(prev => [{ ...payload, id: data.patient.id, displayId: data.patient.displayId || payload.displayId || "", balance: 0, lastVisit: "" } as Patient, ...prev]);
     } else if (patientModal === "edit") {
       const id = patientForm.id as string;
       const r = await fetch(`/api/patients/${id}`, { method: "PATCH", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
       if (!r.ok) return;
+      setPatients(prev => prev.map(p => p.id === id ? { ...p, ...payload } : p));
     }
     setPatientModal(null);
-    await refresh();
   }
 
   async function deletePatient(id: string) {
@@ -1297,7 +1299,11 @@ export default function Page() {
     if (!r.ok) return;
     setOpenPatientId(null);
     setPatientModal(null);
-    await refresh();
+    setPatients(prev => prev.filter(p => p.id !== id));
+    setAppts(prev => prev.filter(a => a.pid !== id));
+    setInvoices(prev => prev.filter(i => i.pid !== id));
+    setMessages(prev => prev.filter(m => m.patientId !== id));
+    setClinical(prev => { const next = { ...prev }; delete next[id]; return next; });
   }
 
   async function saveClinical(next: ClinicalRecord) {
@@ -2017,8 +2023,8 @@ export default function Page() {
                       {a.status === "pending" && (
                         <button
                           onClick={async () => {
-                            await fetch(`/api/appointments/${a.id}`, { method: "PATCH", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ status: "confirmed" }) });
-                            await refresh();
+                            const r = await fetch(`/api/appointments/${a.id}`, { method: "PATCH", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ status: "confirmed" }) });
+                            if (r.ok) setAppts(prev => prev.map(ap => ap.id === a.id ? { ...ap, status: "confirmed" } : ap));
                           }}
                           style={{ padding: "6px 14px", borderRadius: 10, border: `1.5px solid ${G}`, background: GL, color: G, fontWeight: 900, fontSize: 12, cursor: "pointer", fontFamily: "inherit" }}
                         >
@@ -2028,8 +2034,8 @@ export default function Page() {
                       {a.status === "confirmed" && (
                         <button
                           onClick={async () => {
-                            await fetch(`/api/appointments/${a.id}`, { method: "PATCH", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ status: "completed" }) });
-                            await refresh();
+                            const r = await fetch(`/api/appointments/${a.id}`, { method: "PATCH", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ status: "completed" }) });
+                            if (r.ok) setAppts(prev => prev.map(ap => ap.id === a.id ? { ...ap, status: "completed" } : ap));
                           }}
                           style={{ padding: "6px 14px", borderRadius: 10, border: `1.5px solid ${BL}`, background: BLL, color: BL, fontWeight: 900, fontSize: 12, cursor: "pointer", fontFamily: "inherit" }}
                         >
@@ -2039,8 +2045,8 @@ export default function Page() {
                       <button
                         onClick={async () => {
                           if (!confirm("Delete appointment?")) return;
-                          await fetch(`/api/appointments/${a.id}`, { method: "DELETE", credentials: "include" });
-                          await refresh();
+                          const r = await fetch(`/api/appointments/${a.id}`, { method: "DELETE", credentials: "include" });
+                          if (r.ok) setAppts(prev => prev.filter(ap => ap.id !== a.id));
                         }}
                         style={{ padding: "6px 10px", borderRadius: 10, border: `1.5px solid ${RD}33`, background: RDL, color: RD, fontWeight: 900, fontSize: 12, cursor: "pointer", fontFamily: "inherit", display: "flex", alignItems: "center", gap: 4 }}
                       >
@@ -2106,7 +2112,7 @@ export default function Page() {
                     variant="accent"
                     onClick={async () => {
                       if (!apptForm.patientId || !apptForm.type || !apptForm.date || !apptForm.time) return;
-                      await fetch("/api/appointments", {
+                      const r = await fetch("/api/appointments", {
                         method: "POST",
                         credentials: "include",
                         headers: { "Content-Type": "application/json" },
@@ -2120,8 +2126,11 @@ export default function Page() {
                           notes: apptForm.notes || "",
                         }),
                       });
+                      if (r.ok) {
+                        const data = await r.json();
+                        setAppts(prev => [...prev, data.appt]);
+                      }
                       setApptModal(false);
-                      await refresh();
                     }}
                   >
                     Book
@@ -2242,8 +2251,12 @@ export default function Page() {
                                 {user.role === "Dentist" && (
                                   <button onClick={async () => {
                                     if (!confirm("Delete this invoice?")) return;
-                                    await fetch(`/api/invoices/${inv.id}`, { method: "DELETE" });
-                                    refresh();
+                                    const r = await fetch(`/api/invoices/${inv.id}`, { method: "DELETE" });
+                                    if (r.ok) {
+                                      const outstanding = inv.total - inv.paid;
+                                      setInvoices(prev => prev.filter(i => i.id !== inv.id));
+                                      setPatients(prev => prev.map(p => p.id === inv.pid ? { ...p, balance: p.balance - outstanding } : p));
+                                    }
                                   }}
                                   style={{ background: "none", border: "none", color: "#ef4444", cursor: "pointer", padding: 5, borderRadius: 6, display: "flex" }}
                                   onMouseEnter={e => e.currentTarget.style.background = "#fee2e2"} onMouseLeave={e => e.currentTarget.style.background = "none"}><Ico n="del" s={13} /></button>
@@ -2339,19 +2352,42 @@ export default function Page() {
                       
                       const method = invoiceForm.id ? "PATCH" : "POST";
                       const url = invoiceForm.id ? `/api/invoices/${invoiceForm.id}` : "/api/invoices";
+                      const invDate = invoiceForm.date || todayYMD();
+                      const cleanItems = items.map((x: any) => ({ d: x.d, a: x.a }));
 
-                      await fetch(url, {
+                      const r = await fetch(url, {
                         method,
                         credentials: "include",
                         headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({
-                          patientId,
-                          date: invoiceForm.date || todayYMD(),
-                          items: items.map((x: any) => ({ d: x.d, a: x.a })),
-                        }),
+                        body: JSON.stringify({ patientId, date: invDate, items: cleanItems }),
                       });
+                      if (r.ok) {
+                        const newTotal = cleanItems.reduce((s: number, x: any) => s + Number(x.a), 0);
+                        const pname = patients.find(p => p.id === patientId)?.name || "";
+                        if (!invoiceForm.id) {
+                          const data = await r.json();
+                          setInvoices(prev => [{ id: data.invoice.id, pid: patientId, pname, date: invDate, total: newTotal, paid: 0, status: "unpaid", items: cleanItems } as any, ...prev]);
+                          setPatients(prev => prev.map(p => p.id === patientId ? { ...p, balance: p.balance + newTotal } : p));
+                        } else {
+                          const existingInv = invoices.find(i => i.id === invoiceForm.id)!;
+                          const newPaid = Math.min(existingInv.paid, newTotal);
+                          const newStatus: Invoice["status"] = newPaid >= newTotal ? "paid" : newPaid > 0 ? "partial" : "unpaid";
+                          setInvoices(prev => prev.map(i => i.id === invoiceForm.id ? { ...i, pid: patientId, pname, date: invDate, total: newTotal, paid: newPaid, status: newStatus, items: cleanItems } as any : i));
+                          const oldOutstanding = existingInv.total - existingInv.paid;
+                          const newOutstanding = newTotal - newPaid;
+                          if (existingInv.pid === patientId) {
+                            const delta = newOutstanding - oldOutstanding;
+                            if (delta !== 0) setPatients(prev => prev.map(p => p.id === patientId ? { ...p, balance: p.balance + delta } : p));
+                          } else {
+                            setPatients(prev => prev.map(p => {
+                              if (p.id === existingInv.pid) return { ...p, balance: p.balance - oldOutstanding };
+                              if (p.id === patientId) return { ...p, balance: p.balance + newOutstanding };
+                              return p;
+                            }));
+                          }
+                        }
+                      }
                       setInvoiceModal(false);
-                      await refresh();
                     }}
                   >
                     {invoiceForm.id ? "Save Invoice" : "Create Invoice"}
@@ -2381,14 +2417,20 @@ export default function Page() {
                       const amount = Number(payAmt);
                       if (!amount || amount <= 0) return;
                       if (!confirm(`Record payment of ₦${amount.toLocaleString("en-NG")}?`)) return;
-                      await fetch(`/api/invoices/${payModal.id}/payments`, {
+                      const r = await fetch(`/api/invoices/${payModal.id}/payments`, {
                         method: "POST",
                         credentials: "include",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ amount }),
                       });
+                      if (r.ok) {
+                        const applied = Math.min(amount, payModal.total - payModal.paid);
+                        const newPaid = payModal.paid + applied;
+                        const newStatus: Invoice["status"] = newPaid >= payModal.total ? "paid" : "partial";
+                        setInvoices(prev => prev.map(i => i.id === payModal.id ? { ...i, paid: newPaid, status: newStatus } : i));
+                        setPatients(prev => prev.map(p => p.id === payModal.pid ? { ...p, balance: p.balance - applied } : p));
+                      }
                       setPayModal(null);
-                      await refresh();
                     }}
                   >
                     Record Payment
@@ -2435,8 +2477,8 @@ export default function Page() {
                   <div key={t.id} style={{ background: t.done ? SA : SU, border: `1px solid ${BR}`, borderRadius: 12, padding: "12px 15px", display: "flex", alignItems: "center", gap: 12, boxShadow: t.done ? "none" : SH, opacity: t.done ? 0.75 : 1, transition: "all 0.14s" }}>
                     <button
                       onClick={async () => {
-                        await fetch(`/api/tasks/${t.id}`, { method: "PATCH", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ done: !t.done }) });
-                        await refresh();
+                        const r = await fetch(`/api/tasks/${t.id}`, { method: "PATCH", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ done: !t.done }) });
+                        if (r.ok) setTasks(prev => prev.map(task => task.id === t.id ? { ...task, done: !task.done } : task));
                       }}
                       style={{ width: 22, height: 22, borderRadius: 6, border: `2px solid ${t.done ? G : BR}`, background: t.done ? G : "transparent", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", flexShrink: 0, color: "#fff", transition: "all 0.14s" }}
                       aria-label="Toggle done"
@@ -2452,8 +2494,8 @@ export default function Page() {
                     <button
                       onClick={async () => {
                         if (!confirm("Delete task?")) return;
-                        await fetch(`/api/tasks/${t.id}`, { method: "DELETE", credentials: "include" });
-                        await refresh();
+                        const r = await fetch(`/api/tasks/${t.id}`, { method: "DELETE", credentials: "include" });
+                        if (r.ok) setTasks(prev => prev.filter(task => task.id !== t.id));
                       }}
                       style={{ background: "none", border: "none", color: "#ef4444", cursor: "pointer", padding: 4, borderRadius: 5, display: "flex" }}
                       onMouseEnter={e => e.currentTarget.style.background = "#fee2e2"}
@@ -2500,9 +2542,13 @@ export default function Page() {
                     variant="primary"
                     onClick={async () => {
                       if (!taskForm.title) return;
-                      await fetch("/api/tasks", { method: "POST", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ title: taskForm.title, priority: taskForm.priority, due: taskForm.due, assignedToId: taskForm.assignedToId }) });
+                      const r = await fetch("/api/tasks", { method: "POST", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ title: taskForm.title, priority: taskForm.priority, due: taskForm.due, assignedToId: taskForm.assignedToId }) });
+                      if (r.ok) {
+                        const data = await r.json();
+                        const who = staff.find(s => s.id === taskForm.assignedToId)?.name || "";
+                        setTasks(prev => [...prev, { id: data.task.id, title: taskForm.title, priority: taskForm.priority, due: taskForm.due, done: false, who }]);
+                      }
                       setTaskModal(false);
-                      await refresh();
                     }}
                   >
                     Add Task
@@ -2578,14 +2624,18 @@ export default function Page() {
                     variant="warn"
                     onClick={async () => {
                       if (!msgForm.patientId || !msgForm.type || !msgForm.content) return;
-                      await fetch("/api/messages", {
+                      const r = await fetch("/api/messages", {
                         method: "POST",
                         credentials: "include",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ patientId: msgForm.patientId, type: msgForm.type, content: msgForm.content }),
                       });
+                      if (r.ok) {
+                        const data = await r.json();
+                        const patient = patients.find(p => p.id === msgForm.patientId)?.name || "";
+                        setMessages(prev => [{ id: data.message.id, patientId: msgForm.patientId, patient, type: msgForm.type as Message["type"], content: msgForm.content, date: todayYMD(), sender: user!.name }, ...prev]);
+                      }
                       setMsgModal(false);
-                      await refresh();
                     }}
                   >
                     Send
